@@ -2,9 +2,11 @@ package com.meru.app.clases.repository;
 
 import com.meru.app.clases.domain.EstadoReserva;
 import com.meru.app.clases.domain.Reserva;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +16,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     Optional<Reserva> findByClaseIdAndAlumnoIdAndEstado(Long claseId, Long alumnoId, EstadoReserva estado);
     List<Reserva> findByAlumnoId(Long alumnoId);
     List<Reserva> findByClaseId(Long claseId);
+
+    @EntityGraph(attributePaths = {"clase", "alumno"})
+    List<Reserva> findByEstadoIn(Collection<EstadoReserva> estados);
 }
