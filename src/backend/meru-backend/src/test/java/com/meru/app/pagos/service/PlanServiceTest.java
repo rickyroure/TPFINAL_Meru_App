@@ -84,4 +84,36 @@ class PlanServiceTest {
         assertThrows(RecursoNoEncontradoException.class, () -> planService.obtenerPorId(99L));
         verify(planRepository, times(1)).findById(99L);
     }
+
+    @Test
+    void actualizarPlan_cuandoExiste_debeModificarTarifaYRetornarPlan() {
+        Plan existente = new Plan();
+        existente.setId(1L);
+        existente.setNombre("Pase Libre");
+        existente.setPrecio(new BigDecimal("25000.00"));
+        existente.setDuracionDias(30);
+
+        CrearPlanRequestDTO request = new CrearPlanRequestDTO("Pase Libre Full", new BigDecimal("32000.00"), 30);
+
+        when(planRepository.findById(1L)).thenReturn(Optional.of(existente));
+        when(planRepository.save(any(Plan.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Plan actualizado = planService.actualizarPlan(1L, request);
+
+        assertEquals(1L, actualizado.getId());
+        assertEquals("Pase Libre Full", actualizado.getNombre());
+        assertEquals(new BigDecimal("32000.00"), actualizado.getPrecio());
+        assertEquals(30, actualizado.getDuracionDias());
+        verify(planRepository).save(existente);
+    }
+
+    @Test
+    void actualizarPlan_cuandoNoExiste_debeLanzarExcepcion() {
+        CrearPlanRequestDTO request = new CrearPlanRequestDTO("Pase Libre", new BigDecimal("30000.00"), 30);
+        when(planRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(RecursoNoEncontradoException.class, () -> planService.actualizarPlan(99L, request));
+        verify(planRepository, never()).save(any());
+    }
 }
+

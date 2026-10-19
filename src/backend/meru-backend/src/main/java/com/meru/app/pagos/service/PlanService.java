@@ -37,4 +37,14 @@ public class PlanService {
         return planRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Plan no encontrado con ID: " + id));
     }
+
+    @Transactional
+    public Plan actualizarPlan(Long id, CrearPlanRequestDTO request) {
+        Plan plan = obtenerPorId(id);
+        plan.setNombre(request.nombre());
+        plan.setPrecio(request.precio());
+        plan.setDuracionDias(request.duracionDias());
+        return planRepository.save(plan);
+    }
 }
+
