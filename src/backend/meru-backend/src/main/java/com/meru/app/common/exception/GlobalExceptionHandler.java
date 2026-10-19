@@ -36,6 +36,13 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ProblemDetail handleStockInsuficiente(StockInsuficienteException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail handleIllegalArgument(IllegalArgumentException ex) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
