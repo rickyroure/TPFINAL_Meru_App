@@ -5,6 +5,7 @@ import com.meru.app.common.exception.GlobalExceptionHandler;
 import com.meru.app.common.exception.RecursoNoEncontradoException;
 import com.meru.app.security.SecurityConfig;
 import com.meru.app.shop.domain.Producto;
+import com.meru.app.shop.dto.ProductoMasVendidoDTO;
 import com.meru.app.shop.dto.ProductoRequestDTO;
 import com.meru.app.shop.service.ProductoService;
 import org.junit.jupiter.api.Test;
@@ -161,5 +162,32 @@ class ProductoControllerTest {
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_alumno"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nombre").value("Agua Mineral"));
+    }
+
+    @Test
+    void obtenerMasVendidos_conRolAdmin_debeRetornar200OkConReporte() throws Exception {
+        ProductoMasVendidoDTO dto = new ProductoMasVendidoDTO(
+                1L, "Proteína Whey", 4, 15L, new BigDecimal("450000.00")
+        );
+
+        when(productoService.obtenerProductosMasVendidos(any(), any())).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/productos/mas-vendidos")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].productoId").value(1))
+                .andExpect(jsonPath("$[0].nombre").value("Proteína Whey"))
+                .andExpect(jsonPath("$[0].stockActual").value(4))
+                .andExpect(jsonPath("$[0].cantidadVendida").value(15))
+                .andExpect(jsonPath("$[0].totalRecaudado").value(450000.00));
+    }
+
+    @Test
+    void obtenerMasVendidos_conRolAlumno_debeRetornar403Forbidden() throws Exception {
+        mockMvc.perform(get("/productos/mas-vendidos")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_alumno"))))
+                .andExpect(status().isForbidden());
+
+        verify(productoService, never()).obtenerProductosMasVendidos(any(), any());
     }
 }

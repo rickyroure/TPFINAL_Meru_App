@@ -1,8 +1,12 @@
 package com.meru.app.shop.service;
 
 import com.meru.app.common.exception.RecursoNoEncontradoException;
+import com.meru.app.shop.domain.EstadoOrden;
+import com.meru.app.shop.domain.ItemOrden;
 import com.meru.app.shop.domain.Producto;
+import com.meru.app.shop.dto.ProductoMasVendidoDTO;
 import com.meru.app.shop.dto.ProductoRequestDTO;
+import com.meru.app.shop.repository.ItemOrdenRepository;
 import com.meru.app.shop.repository.ProductoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +28,9 @@ class ProductoServiceTest {
 
     @Mock
     private ProductoRepository productoRepository;
+
+    @Mock
+    private ItemOrdenRepository itemOrdenRepository;
 
     @InjectMocks
     private ProductoService productoService;
@@ -136,5 +144,84 @@ class ProductoServiceTest {
 
         assertEquals(2, result.size());
         verify(productoRepository, times(1)).findAll();
+    }
+
+    // --- Tests SH4: Reporte de productos más vendidos y stock actual ---
+
+    @Test
+    void obtenerProductosMasVendidos_conPeriodo_debeAgruparItemsPagadosYOrdenarPorCantidadDescendente() {
+        LocalDateTime desde = LocalDateTime.of(2026, 10, 1, 0, 0);
+        LocalDateTime hasta = LocalDateTime.of(2026, 10, 31, 23, 59);
+
+        Producto p1 = new Producto();
+        p1.setId(1L);
+        p1.setNombre("Proteína Whey");
+        p1.setStock(4);
+
+        Producto p2 = new Producto();
+        p2.setId(2L);
+        p2.setNombre("Agua Mineral");
+        p2.setStock(30);
+
+        ItemOrden item1 = new ItemOrden();
+        item1.setProducto(p1);
+        item1.setCantidad(2);
+        item1.setPrecioUnitario(new BigDecimal("30000.00"));
+
+        ItemOrden item2 = new ItemOrden();
+        item2.setProducto(p2);
+        item2.setCantidad(10);
+        item2.setPrecioUnitario(new BigDecimal("1500.00"));
+
+        ItemOrden item3 = new ItemOrden();
+        item3.setProducto(p1);
+        item3.setCantidad(1);
+        item3.setPrecioUnitario(new BigDecimal("30000.00"));
+
+        when(itemOrdenRepository.findByOrdenEstadoAndOrdenFechaBetween(EstadoOrden.PAGADA, desde, hasta))
+                .thenReturn(List.of(item1, item2, item3));
+
+        List<ProductoMasVendidoDTO> reporte = productoService.obtenerProductosMasVendidos(desde, hasta);
+
+        assertEquals(2, reporte.size());
+
+        // Primero debe venir Agua Mineral (10 unidades vendidas)
+        ProductoMasVendidoDTO primero = reporte.get(0);
+        assertEquals(2L, primero.productoId());
+        assertEquals("Agua Mineral", primero.nombre());
+        assertEquals(30, primero.stockActual());
+        assertEquals(10L, primero.cantidadVendida());
+        assertEquals(new BigDecimal("15000.00"), primero.totalRecaudado());
+
+        // Segundo debe venir Proteína Whey (2 + 1 = 3 unidades vendidas)
+        ProductoMasVendidoDTO segundo = reporte.get(1);
+        assertEquals(1L, segundo.productoId());
+        assertEquals("Proteína Whey", segundo.nombre());
+        assertEquals(4, segundo.stockActual());
+        assertEquals(3L, segundo.cantidadVendida());
+        assertEquals(new BigDecimal("90000.00"), segundo.totalRecaudado());
+    }
+
+    @Test
+    void obtenerProductosMasVendidos_sinFechas_debeConsultarTodasLasOrdenesPagadas() {
+        Producto p1 = new Producto();
+        p1.setId(1L);
+        p1.setNombre("Creatina");
+        p1.setStock(8);
+
+        ItemOrden item1 = new ItemOrden();
+        item1.setProducto(p1);
+        item1.setCantidad(5);
+        item1.setPrecioUnitario(new BigDecimal("25000.00"));
+
+        when(itemOrdenRepository.findByOrdenEstado(EstadoOrden.PAGADA))
+                .thenReturn(List.of(item1));
+
+        List<ProductoMasVendidoDTO> reporte = productoService.obtenerProductosMasVendidos(null, null);
+
+        assertEquals(1, reporte.size());
+        assertEquals(5L, reporte.getFirst().cantidadVendida());
+        assertEquals(8, reporte.getFirst().stockActual());
+        verify(itemOrdenRepository, times(1)).findByOrdenEstado(EstadoOrden.PAGADA);
     }
 }
