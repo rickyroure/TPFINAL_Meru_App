@@ -13,6 +13,9 @@ import com.meru.app.pagos.repository.SuscripcionRepository;
 import com.meru.app.pagos.strategy.PaymentProcessor;
 import com.meru.app.pagos.strategy.ResultadoPago;
 import com.meru.app.pagos.strategy.SolicitudPago;
+import com.meru.app.shop.domain.EstadoOrden;
+import com.meru.app.shop.domain.Orden;
+import com.meru.app.shop.repository.OrdenRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,15 +28,18 @@ public class PagoService {
 
     private final PagoRepository pagoRepository;
     private final SuscripcionRepository suscripcionRepository;
+    private final OrdenRepository ordenRepository;
     private final List<PaymentProcessor> processors;
     private final ApplicationEventPublisher eventPublisher;
 
     public PagoService(PagoRepository pagoRepository,
                        SuscripcionRepository suscripcionRepository,
+                       OrdenRepository ordenRepository,
                        List<PaymentProcessor> processors,
                        ApplicationEventPublisher eventPublisher) {
         this.pagoRepository = pagoRepository;
         this.suscripcionRepository = suscripcionRepository;
+        this.ordenRepository = ordenRepository;
         this.processors = processors;
         this.eventPublisher = eventPublisher;
     }
@@ -48,9 +54,17 @@ public class PagoService {
         }
 
         Suscripcion suscripcion = null;
+        Orden orden = null;
+
         if (request.suscripcionId() != null) {
             suscripcion = suscripcionRepository.findById(request.suscripcionId())
                     .orElseThrow(() -> new RecursoNoEncontradoException("Suscripción no encontrada con ID: " + request.suscripcionId()));
+        } else {
+            orden = ordenRepository.findById(request.ordenId())
+                    .orElseThrow(() -> new RecursoNoEncontradoException("Orden no encontrada con ID: " + request.ordenId()));
+            if (orden.getEstado() != EstadoOrden.PENDIENTE) {
+                throw new IllegalArgumentException("La orden con ID " + request.ordenId() + " no se encuentra en estado PENDIENTE");
+            }
         }
 
         PaymentProcessor processor = processors.stream()
@@ -84,9 +98,7 @@ public class PagoService {
                 suscripcionRepository.save(suscripcion);
             }
 
-            Long alumnoId = (suscripcion != null && suscripcion.getAlumno() != null)
-                    ? suscripcion.getAlumno().getId()
-                    : null;
+            Long alumnoId = resolverAlumnoId(suscripcion, orden);
 
             eventPublisher.publishEvent(new PagoConfirmadoEvent(
                     pago.getId(),
@@ -103,6 +115,11 @@ public class PagoService {
     @Transactional(readOnly = true)
     public List<Pago> listarPorSuscripcion(Long suscripcionId) {
         return pagoRepository.findBySuscripcionId(suscripcionId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Pago> listarPorOrden(Long ordenId) {
+        return pagoRepository.findByOrdenId(ordenId);
     }
 
     @Transactional(readOnly = true)
@@ -130,9 +147,11 @@ public class PagoService {
                 suscripcionRepository.save(suscripcion);
             }
 
-            Long alumnoId = (suscripcion != null && suscripcion.getAlumno() != null)
-                    ? suscripcion.getAlumno().getId()
+            Orden orden = pago.getOrdenId() != null
+                    ? ordenRepository.findById(pago.getOrdenId()).orElse(null)
                     : null;
+
+            Long alumnoId = resolverAlumnoId(suscripcion, orden);
 
             eventPublisher.publishEvent(new PagoConfirmadoEvent(
                     pago.getId(),
@@ -142,8 +161,18 @@ public class PagoService {
                     pago.getOrdenId()
             ));
         } else if ("rejected".equalsIgnoreCase(estadoMp)) {
-            pago.setEstado(com.meru.app.pagos.domain.EstadoPago.RECHAZADO);
+            pago.setEstado(EstadoPago.RECHAZADO);
             pagoRepository.save(pago);
         }
+    }
+
+    private Long resolverAlumnoId(Suscripcion suscripcion, Orden orden) {
+        if (suscripcion != null && suscripcion.getAlumno() != null) {
+            return suscripcion.getAlumno().getId();
+        }
+        if (orden != null && orden.getAlumno() != null) {
+            return orden.getAlumno().getId();
+        }
+        return null;
     }
 }

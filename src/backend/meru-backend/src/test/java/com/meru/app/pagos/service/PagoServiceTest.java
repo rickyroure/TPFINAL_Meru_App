@@ -15,6 +15,9 @@ import com.meru.app.pagos.repository.SuscripcionRepository;
 import com.meru.app.pagos.strategy.EfectivoProcessor;
 import com.meru.app.pagos.strategy.MercadoPagoProcessor;
 import com.meru.app.pagos.strategy.PaymentProcessor;
+import com.meru.app.shop.domain.EstadoOrden;
+import com.meru.app.shop.domain.Orden;
+import com.meru.app.shop.repository.OrdenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +44,9 @@ class PagoServiceTest {
     private SuscripcionRepository suscripcionRepository;
 
     @Mock
+    private OrdenRepository ordenRepository;
+
+    @Mock
     private ApplicationEventPublisher eventPublisher;
 
     private PagoService pagoService;
@@ -51,7 +57,7 @@ class PagoServiceTest {
                 new EfectivoProcessor(),
                 new MercadoPagoProcessor()
         );
-        pagoService = new PagoService(pagoRepository, suscripcionRepository, processors, eventPublisher);
+        pagoService = new PagoService(pagoRepository, suscripcionRepository, ordenRepository, processors, eventPublisher);
     }
 
     @Test
@@ -187,7 +193,7 @@ class PagoServiceTest {
     void procesarPago_debeRechazar_cuandoMetodoNoTieneProcessor() {
         // Creamos un servicio sin processors
         PagoService serviceSinProcessors = new PagoService(
-                pagoRepository, suscripcionRepository, List.of(), eventPublisher
+                pagoRepository, suscripcionRepository, ordenRepository, List.of(), eventPublisher
         );
 
         Suscripcion suscripcion = new Suscripcion();
@@ -247,5 +253,169 @@ class PagoServiceTest {
         verify(pagoRepository, never()).save(any());
         verify(suscripcionRepository, never()).save(any());
         verify(eventPublisher, never()).publishEvent(any());
+    }
+
+    // --- Tests SH3: Pago de Órdenes del Shop ---
+
+    @Test
+    void procesarPago_ordenConEfectivo_debeAprobarInmediatamente_yPublicarEventoConOrdenIdYAlumnoId() {
+        Long ordenId = 45L;
+        Alumno alumno = new Alumno();
+        alumno.setId(15L);
+
+        Orden orden = new Orden();
+        orden.setId(ordenId);
+        orden.setAlumno(alumno);
+        orden.setEstado(EstadoOrden.PENDIENTE);
+        orden.setTotal(new BigDecimal("35000.00"));
+
+        when(ordenRepository.findById(ordenId)).thenReturn(Optional.of(orden));
+        when(pagoRepository.save(any(Pago.class))).thenAnswer(inv -> {
+            Pago p = inv.getArgument(0);
+            p.setId(700L);
+            return p;
+        });
+
+        ProcesarPagoRequestDTO request = new ProcesarPagoRequestDTO(
+                new BigDecimal("35000.00"),
+                MetodoPago.EFECTIVO,
+                null,
+                ordenId
+        );
+
+        PagoResponseDTO response = pagoService.procesarPago(request);
+
+        assertNotNull(response);
+        assertEquals(700L, response.id());
+        assertEquals(ordenId, response.ordenId());
+        assertNull(response.suscripcionId());
+        assertEquals(EstadoPago.APROBADO, response.estado());
+
+        ArgumentCaptor<PagoConfirmadoEvent> eventCaptor = ArgumentCaptor.forClass(PagoConfirmadoEvent.class);
+        verify(eventPublisher, times(1)).publishEvent(eventCaptor.capture());
+        PagoConfirmadoEvent event = eventCaptor.getValue();
+        assertEquals(700L, event.pagoId());
+        assertEquals(15L, event.alumnoId());
+        assertEquals(ordenId, event.ordenId());
+        assertNull(event.suscripcionId());
+    }
+
+    @Test
+    void procesarPago_ordenConMercadoPago_debeQuedarPendiente_sinPublicarEvento() {
+        Long ordenId = 46L;
+        Alumno alumno = new Alumno();
+        alumno.setId(15L);
+
+        Orden orden = new Orden();
+        orden.setId(ordenId);
+        orden.setAlumno(alumno);
+        orden.setEstado(EstadoOrden.PENDIENTE);
+        orden.setTotal(new BigDecimal("28000.00"));
+
+        when(ordenRepository.findById(ordenId)).thenReturn(Optional.of(orden));
+        when(pagoRepository.save(any(Pago.class))).thenAnswer(inv -> {
+            Pago p = inv.getArgument(0);
+            p.setId(701L);
+            return p;
+        });
+
+        ProcesarPagoRequestDTO request = new ProcesarPagoRequestDTO(
+                new BigDecimal("28000.00"),
+                MetodoPago.MERCADOPAGO,
+                null,
+                ordenId
+        );
+
+        PagoResponseDTO response = pagoService.procesarPago(request);
+
+        assertEquals(701L, response.id());
+        assertEquals(ordenId, response.ordenId());
+        assertEquals(EstadoPago.PENDIENTE, response.estado());
+        verify(eventPublisher, never()).publishEvent(any());
+    }
+
+    @Test
+    void procesarPago_debeRechazar_cuandoOrdenNoExiste() {
+        when(ordenRepository.findById(999L)).thenReturn(Optional.empty());
+
+        ProcesarPagoRequestDTO request = new ProcesarPagoRequestDTO(
+                new BigDecimal("10000.00"),
+                MetodoPago.EFECTIVO,
+                null,
+                999L
+        );
+
+        assertThrows(RecursoNoEncontradoException.class, () -> pagoService.procesarPago(request));
+        verify(pagoRepository, never()).save(any());
+    }
+
+    @Test
+    void procesarPago_debeRechazar_cuandoOrdenNoEstaPendiente() {
+        Long ordenId = 47L;
+        Orden orden = new Orden();
+        orden.setId(ordenId);
+        orden.setEstado(EstadoOrden.PAGADA);
+
+        when(ordenRepository.findById(ordenId)).thenReturn(Optional.of(orden));
+
+        ProcesarPagoRequestDTO request = new ProcesarPagoRequestDTO(
+                new BigDecimal("10000.00"),
+                MetodoPago.EFECTIVO,
+                null,
+                ordenId
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> pagoService.procesarPago(request));
+        verify(pagoRepository, never()).save(any());
+    }
+
+    @Test
+    void procesarWebhookMercadoPago_paraOrden_debeAprobarPago_yPublicarEventoConOrdenIdYAlumnoId() {
+        Long pagoId = 800L;
+        Long ordenId = 48L;
+
+        Alumno alumno = new Alumno();
+        alumno.setId(25L);
+
+        Orden orden = new Orden();
+        orden.setId(ordenId);
+        orden.setAlumno(alumno);
+        orden.setEstado(EstadoOrden.PENDIENTE);
+
+        Pago pago = new Pago();
+        pago.setId(pagoId);
+        pago.setOrdenId(ordenId);
+        pago.setEstado(EstadoPago.PENDIENTE);
+        pago.setMonto(new BigDecimal("12000.00"));
+
+        when(pagoRepository.findById(pagoId)).thenReturn(Optional.of(pago));
+        when(ordenRepository.findById(ordenId)).thenReturn(Optional.of(orden));
+
+        pagoService.procesarWebhookMercadoPago(pagoId, "approved");
+
+        assertEquals(EstadoPago.APROBADO, pago.getEstado());
+        verify(pagoRepository, times(1)).save(pago);
+
+        ArgumentCaptor<PagoConfirmadoEvent> eventCaptor = ArgumentCaptor.forClass(PagoConfirmadoEvent.class);
+        verify(eventPublisher, times(1)).publishEvent(eventCaptor.capture());
+        PagoConfirmadoEvent event = eventCaptor.getValue();
+        assertEquals(pagoId, event.pagoId());
+        assertEquals(25L, event.alumnoId());
+        assertEquals(ordenId, event.ordenId());
+    }
+
+    @Test
+    void listarPorOrden_debeRetornarPagosAsociadosALaOrden() {
+        Pago p = new Pago();
+        p.setId(1L);
+        p.setOrdenId(45L);
+
+        when(pagoRepository.findByOrdenId(45L)).thenReturn(List.of(p));
+
+        List<Pago> result = pagoService.listarPorOrden(45L);
+
+        assertEquals(1, result.size());
+        assertEquals(45L, result.getFirst().getOrdenId());
+        verify(pagoRepository, times(1)).findByOrdenId(45L);
     }
 }
