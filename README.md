@@ -99,10 +99,11 @@ El sistema contempla tres roles principales: **Administrador** (superusuario), *
 ## 5. Estructura del repositorio
 
 ```
-/frontend      → proyecto React
-/backend       → proyecto Spring Boot
-/database      → scripts DDL, diagrama ER
-/docs          → informes y entregas
+/src/frontend                 → proyecto React
+/src/backend                  → proyecto Spring Boot
+/keycloak                     → servicio de autenticación y autorización (Docker Compose)
+/base de datos                → scripts DDL, diagrama ER
+/documentacion e informes     → informes y entregas
 README.md
 ```
 
@@ -114,6 +115,3 @@ README.md
 - **Asociación alumno–profesor**: se podrá reasignar el profesor de un alumno para seguimiento y evolución del entrenamiento.
 - **Funcionalidades accesorias**: ej. cronómetro tipo tabata.
 - **Pendiente de definición para la 2.ª entrega**: mecanismo de check-in/check-out para actividades sin reserva previa (ej. musculación libre), necesario para que el medidor de capacidad funcione también en esos casos.
-
-
--Prueba commit
