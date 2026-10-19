@@ -1,0 +1,1848 @@
+{
+  "info": {
+    "_postman_id": "25ef6c4f-a5d1-4f00-b843-1bcf52fcf4db",
+    "name": "Meru App - Local E2E Suite",
+    "description": "Colección completa para pruebas funcionales y E2E del backend de Meru App, incluyendo autenticación con Keycloak, gestión de roles, rutinas, clases, reservas y pagos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0. Autenticación (Keycloak)",
+      "description": "Endpoints para obtener tokens JWT para los diferentes roles preconfigurados en Keycloak.",
+      "item": [
+        {
+          "name": "0.1 Obtener Token (admin.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', jsonData.access_token);",
+                  "    console.log('Token JWT (Admin) guardado en la colección');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "client_id",
+                  "value": "meru-backend",
+                  "type": "text"
+                },
+                {
+                  "key": "client_secret",
+                  "value": "cambiar-este-secret-en-produccion",
+                  "type": "text"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "admin.test",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "admin1234",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/meru-app/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "meru-app",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            }
+          }
+        },
+        {
+          "name": "0.2 Obtener Token (profesor.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', jsonData.access_token);",
+                  "    console.log('Token JWT (Profesor) guardado en la colección');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "client_id",
+                  "value": "meru-backend",
+                  "type": "text"
+                },
+                {
+                  "key": "client_secret",
+                  "value": "cambiar-este-secret-en-produccion",
+                  "type": "text"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "profesor.test",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "profesor1234",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/meru-app/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "meru-app",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            }
+          }
+        },
+        {
+          "name": "0.3 Obtener Token (alumno.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', jsonData.access_token);",
+                  "    console.log('Token JWT (Alumno) guardado en la colección');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "client_id",
+                  "value": "meru-backend",
+                  "type": "text"
+                },
+                {
+                  "key": "client_secret",
+                  "value": "cambiar-este-secret-en-produccion",
+                  "type": "text"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "alumno.test",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "alumno1234",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/meru-app/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "meru-app",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Seguridad y Test de Roles",
+      "description": "Endpoints para verificar el estado de la API, roles de seguridad y sincronización de usuarios.",
+      "item": [
+        {
+          "name": "1.1 Ping Público (Sin Auth)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/public/ping",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "ping"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.2 Ver Info y Claims del Token Actual",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Retorna claims del usuario', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('keycloakId');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "test",
+                "user"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.3 Test Endpoint Admin Only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Acceso verificado para rol admin (200 o 403)', function () {",
+                  "    pm.expect([200, 403]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/admin-only",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "test",
+                "admin-only"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.4 Test Endpoint Alumno Only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Acceso verificado para rol alumno (200 o 403)', function () {",
+                  "    pm.expect([200, 403]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/alumno-only",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "test",
+                "alumno-only"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.5 Sincronizar Usuario en BD (S2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"keycloakId\": \"84e56393-8021-4672-9c7f-113d2d6ac2e0\",\n  \"email\": \"admin.test@meru.app\",\n  \"nombre\": \"Admin\",\n  \"apellido\": \"De Prueba\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/sync",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "sync"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Alumnos y Profesores",
+      "item": [
+        {
+          "name": "2.1 Crear Profesor (P1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"especialidad\": \"Musculación y Fuerza\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profesores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profesores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.2 Obtener Profesor por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profesores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profesores",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.3 Crear Alumno (A1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"aptoFisico\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alumnos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.4 Obtener Alumno por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/alumnos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.5 Asignar Profesor a Alumno (P3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/alumnos/1/profesor/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos",
+                "1",
+                "profesor",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Entrenamiento, Rutinas y Progreso",
+      "item": [
+        {
+          "name": "3.1 Crear Ejercicio (E1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Press de Banca Plano\",\n  \"grupoMuscular\": \"Pecho\",\n  \"descripcion\": \"Barra olímpica al pecho con agarre estándar\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ejercicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ejercicios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.2 Listar Todos los Ejercicios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ejercicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ejercicios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.3 Listar Ejercicios con Filtro por Grupo Muscular",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ejercicios?grupoMuscular=Pecho",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ejercicios"
+              ],
+              "query": [
+                {
+                  "key": "grupoMuscular",
+                  "value": "Pecho"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.4 Obtener Ejercicio por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ejercicios/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ejercicios",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.5 Registrar 1RM (E2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ejercicioId\": 1,\n  \"valor1rm\": 110.50,\n  \"fechaMedicion\": \"2026-10-19\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alumnos/1/1rm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos",
+                "1",
+                "1rm"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.6 Listar Histórico 1RM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/alumnos/1/1rm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos",
+                "1",
+                "1rm"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.7 Crear Rutina Plantilla",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profesorId\": 1,\n  \"nombre\": \"Fuerza e Hipertrofia 4 Días\",\n  \"duracionSemanas\": 8,\n  \"items\": [\n    {\n      \"ejercicioId\": 1,\n      \"sesion\": \"A\",\n      \"numeroSemana\": 1,\n      \"orden\": 1,\n      \"series\": 4,\n      \"reps\": 8,\n      \"pausaSegundos\": 120,\n      \"cargaPct\": 75.50,\n      \"rpe\": 8.0\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rutinas/plantillas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutinas",
+                "plantillas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.8 Obtener Rutina por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rutinas/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutinas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.9 Listar Rutinas por Alumno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rutinas/alumno/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutinas",
+                "alumno",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.10 Listar Rutinas por Profesor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rutinas/profesor/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutinas",
+                "profesor",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.11 Asignar (Clonar) Rutina a Alumno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alumnoId\": 1,\n  \"fechaInicio\": \"2026-10-20\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rutinas/1/asignar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutinas",
+                "1",
+                "asignar"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.12 Registrar Progreso de Set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planEjercicioId\": 1,\n  \"numeroSerie\": 1,\n  \"pesoRealizado\": 90.00,\n  \"repeticionesRealizadas\": 8,\n  \"fecha\": \"2026-10-19\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/progreso-sets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "progreso-sets"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.13 Listar Progreso de Sets por Plan Ejercicio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/progreso-sets/plan-ejercicio/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "progreso-sets",
+                "plan-ejercicio",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Clases, Reservas, Check-ins y Calificaciones",
+      "item": [
+        {
+          "name": "4.1 Crear Clase (C1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profesorId\": 1,\n  \"tipoActividad\": \"Crossfit\",\n  \"horario\": \"2027-01-15T18:00:00\",\n  \"cupoMaximo\": 15\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clases"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.2 Listar Todas las Clases",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clases"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.3 Obtener Clase por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clases/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clases",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.4 Reservar Clase (C2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"claseId\": 1,\n  \"alumnoId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.5 Obtener Reserva por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.6 Listar Reservas por Alumno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/alumno/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "alumno",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.7 Listar Reservas por Clase",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/clase/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "clase",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.8 Cancelar Reserva (C3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/1/cancelar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "1",
+                "cancelar"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.9 Registrar Check-in (C8)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alumnoId\": 1,\n  \"actividad\": \"Musculación\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/checkins",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "checkins"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.10 Listar Check-ins por Alumno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/checkins/alumno/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "checkins",
+                "alumno",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.11 Calificar Clase",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"claseId\": 1,\n  \"alumnoId\": 1,\n  \"puntaje\": 5,\n  \"comentario\": \"Excelente clase de Crossfit!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/calificaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calificaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.12 Listar Calificaciones por Clase",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/calificaciones/clase/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "calificaciones",
+                "clase",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Planes, Suscripciones y Pagos",
+      "item": [
+        {
+          "name": "5.1 Crear Plan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pase Libre Anual\",\n  \"precio\": 350000.00,\n  \"duracionDias\": 365\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/planes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "planes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.2 Listar Planes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/planes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "planes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.3 Obtener Plan por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/planes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "planes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.4 Crear Suscripción",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alumnoId\": 1,\n  \"planId\": 1,\n  \"fechaInicio\": \"2026-10-20\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/suscripciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "suscripciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.5 Obtener Suscripción por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/suscripciones/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "suscripciones",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.6 Listar Suscripciones por Alumno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/suscripciones/alumno/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "suscripciones",
+                "alumno",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.7 Pagar con Efectivo (Aprueba de inmediato)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monto\": 350000.00,\n  \"metodo\": \"EFECTIVO\",\n  \"suscripcionId\": 1,\n  \"ordenId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.8 Pagar con MercadoPago (Queda pendiente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monto\": 350000.00,\n  \"metodo\": \"MERCADOPAGO\",\n  \"suscripcionId\": 1,\n  \"ordenId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.9 Obtener Pago por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pagos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.10 Listar Pagos por Suscripción",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pagos/suscripcion/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos",
+                "suscripcion",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.11 Simular Webhook Mercado Pago",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pagoId\": 2,\n  \"estado\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pagos/webhook/mercadopago",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos",
+                "webhook",
+                "mercadopago"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "keycloakUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

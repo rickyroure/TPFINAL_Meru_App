@@ -102,6 +102,7 @@ El sistema contempla tres roles principales: **Administrador** (superusuario), *
 /src/frontend                 → proyecto React
 /src/backend                  → proyecto Spring Boot
 /keycloak                     → servicio de autenticación y autorización (Docker Compose)
+/postman                      → colección de pruebas E2E y funcionales para Postman
 /base de datos                → scripts DDL, diagrama ER
 /documentacion e informes     → informes y entregas
 README.md
