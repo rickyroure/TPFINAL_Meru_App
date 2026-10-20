@@ -1,8 +1,10 @@
 package com.meru.app.administracion.controller;
 
 import com.meru.app.administracion.dto.ActividadComposicionDTO;
+import com.meru.app.administracion.dto.ReporteAfluenciaResponseDTO;
 import com.meru.app.administracion.dto.ReporteIngresosResponseDTO;
 import com.meru.app.administracion.service.ReporteActividadService;
+import com.meru.app.administracion.service.ReporteAfluenciaService;
 import com.meru.app.administracion.service.ReporteIngresosService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +26,7 @@ public class AdministracionController {
 
     private final ReporteActividadService reporteActividadService;
     private final ReporteIngresosService reporteIngresosService;
+    private final ReporteAfluenciaService reporteAfluenciaService;
 
     @GetMapping("/dashboard/actividades")
     @PreAuthorize("hasRole('admin')")
@@ -41,5 +44,13 @@ public class AdministracionController {
     ) {
         return ResponseEntity.ok(reporteIngresosService.obtenerReporteIngresos(anio, mes));
     }
+
+    @GetMapping("/reportes/afluencia")
+    @PreAuthorize("hasRole('admin')")
+    @Operation(summary = "Reporte de días de semana y rangos horarios con mayor afluencia (AD4)")
+    public ResponseEntity<ReporteAfluenciaResponseDTO> obtenerReporteAfluencia() {
+        return ResponseEntity.ok(reporteAfluenciaService.obtenerReporteAfluencia());
+    }
 }
+
 

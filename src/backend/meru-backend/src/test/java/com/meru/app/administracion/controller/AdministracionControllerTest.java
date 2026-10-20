@@ -1,9 +1,13 @@
 package com.meru.app.administracion.controller;
 
 import com.meru.app.administracion.dto.ActividadComposicionDTO;
+import com.meru.app.administracion.dto.AfluenciaDiaSemanaDTO;
+import com.meru.app.administracion.dto.AfluenciaRangoHorarioDTO;
 import com.meru.app.administracion.dto.IngresoMensualDTO;
+import com.meru.app.administracion.dto.ReporteAfluenciaResponseDTO;
 import com.meru.app.administracion.dto.ReporteIngresosResponseDTO;
 import com.meru.app.administracion.service.ReporteActividadService;
+import com.meru.app.administracion.service.ReporteAfluenciaService;
 import com.meru.app.administracion.service.ReporteIngresosService;
 import com.meru.app.common.exception.GlobalExceptionHandler;
 import com.meru.app.security.SecurityConfig;
@@ -36,6 +40,9 @@ class AdministracionControllerTest {
 
     @MockitoBean
     private ReporteIngresosService reporteIngresosService;
+
+    @MockitoBean
+    private ReporteAfluenciaService reporteAfluenciaService;
 
     @MockitoBean
     private JwtDecoder jwtDecoder;
@@ -103,6 +110,33 @@ class AdministracionControllerTest {
     void obtenerReporteIngresos_conRolProfesor_debeRetornar403() throws Exception {
         mockMvc.perform(get("/administracion/reportes/ingresos")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_profesor"))))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void obtenerReporteAfluencia_conRolAdmin_debeRetornar200() throws Exception {
+        ReporteAfluenciaResponseDTO reporte = new ReporteAfluenciaResponseDTO(
+                5L,
+                List.of(new AfluenciaDiaSemanaDTO("LUNES", 1, 3L)),
+                List.of(new AfluenciaRangoHorarioDTO("18:00 - 19:00", 18, 4L))
+        );
+
+        when(reporteAfluenciaService.obtenerReporteAfluencia()).thenReturn(reporte);
+
+        mockMvc.perform(get("/administracion/reportes/afluencia")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalConcurrencias").value(5))
+                .andExpect(jsonPath("$.porDiaSemana[0].diaSemana").value("LUNES"))
+                .andExpect(jsonPath("$.porDiaSemana[0].cantidadConcurrencias").value(3))
+                .andExpect(jsonPath("$.porRangoHorario[0].rangoHorario").value("18:00 - 19:00"))
+                .andExpect(jsonPath("$.porRangoHorario[0].cantidadConcurrencias").value(4));
+    }
+
+    @Test
+    void obtenerReporteAfluencia_conRolAlumno_debeRetornar403() throws Exception {
+        mockMvc.perform(get("/administracion/reportes/afluencia")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_alumno"))))
                 .andExpect(status().isForbidden());
     }
 }
