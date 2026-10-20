@@ -12,6 +12,7 @@ import com.meru.app.common.exception.CancelacionFueraDeTiempoException;
 import com.meru.app.common.exception.CupoAgotadoException;
 import com.meru.app.common.exception.RecursoNoEncontradoException;
 import com.meru.app.common.exception.ReservaDuplicadaException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ReservaService {
 
@@ -98,6 +100,27 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
+    @Transactional
+    public Reserva marcarAsistencia(Long reservaId, boolean asistio) {
+        Reserva reserva = reservaRepository.findById(reservaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Reserva no encontrada con ID: " + reservaId));
+
+        if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+            throw new IllegalArgumentException("No se puede registrar asistencia sobre una reserva cancelada");
+        }
+
+        reserva.setEstado(asistio ? EstadoReserva.ASISTIO : EstadoReserva.NO_ASISTIO);
+        Reserva guardada = reservaRepository.save(reserva);
+
+        if (!asistio) {
+            Long alumnoId = reserva.getAlumno() != null ? reserva.getAlumno().getId() : null;
+            log.info("Notificación fire-and-forget (C7): Se registró inasistencia para la reserva ID {} del alumno ID {}",
+                    reservaId, alumnoId);
+        }
+
+        return guardada;
+    }
+
     @Transactional(readOnly = true)
     public Reserva obtenerPorId(Long id) {
         return reservaRepository.findById(id)
@@ -118,3 +141,4 @@ public class ReservaService {
         return reservaRepository.findByClaseId(claseId);
     }
 }
+

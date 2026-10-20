@@ -193,4 +193,39 @@ class ReservaServiceTest {
         verify(claseRepository, never()).save(any());
         assertEquals(EstadoReserva.CONFIRMADA, reserva.getEstado(), "El estado no debió cambiar");
     }
+
+    @Test
+    void marcarAsistencia_cuandoAsistioEsTrue_debeCambiarEstadoAAsistio() {
+        Reserva reserva = new Reserva();
+        reserva.setId(100L);
+        reserva.setEstado(EstadoReserva.CONFIRMADA);
+
+        when(reservaRepository.findById(100L)).thenReturn(Optional.of(reserva));
+        when(reservaRepository.save(any(Reserva.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Reserva actualizada = reservaService.marcarAsistencia(100L, true);
+
+        assertEquals(EstadoReserva.ASISTIO, actualizada.getEstado());
+        verify(reservaRepository).save(reserva);
+    }
+
+    @Test
+    void marcarAsistencia_cuandoAsistioEsFalse_debeCambiarEstadoANoAsistio() {
+        Alumno alumno = new Alumno();
+        alumno.setId(5L);
+
+        Reserva reserva = new Reserva();
+        reserva.setId(100L);
+        reserva.setAlumno(alumno);
+        reserva.setEstado(EstadoReserva.CONFIRMADA);
+
+        when(reservaRepository.findById(100L)).thenReturn(Optional.of(reserva));
+        when(reservaRepository.save(any(Reserva.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Reserva actualizada = reservaService.marcarAsistencia(100L, false);
+
+        assertEquals(EstadoReserva.NO_ASISTIO, actualizada.getEstado());
+        verify(reservaRepository).save(reserva);
+    }
 }
+
