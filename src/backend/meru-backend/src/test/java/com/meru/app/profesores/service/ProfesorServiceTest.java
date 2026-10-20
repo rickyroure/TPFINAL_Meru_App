@@ -1,5 +1,7 @@
 package com.meru.app.profesores.service;
 
+import com.meru.app.alumnos.domain.Alumno;
+import com.meru.app.alumnos.repository.AlumnoRepository;
 import com.meru.app.common.exception.RecursoNoEncontradoException;
 import com.meru.app.profesores.domain.Profesor;
 import com.meru.app.profesores.dto.ProfesorRequestDTO;
@@ -12,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +29,9 @@ class ProfesorServiceTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private AlumnoRepository alumnoRepository;
 
     @InjectMocks
     private ProfesorService profesorService;
@@ -111,4 +117,24 @@ class ProfesorServiceTest {
 
         assertThrows(RecursoNoEncontradoException.class, () -> profesorService.obtenerProfesor(id));
     }
+
+    @Test
+    void listarAlumnosAsignados_debeRetornarCarteraDelProfesor() {
+        Profesor profesor = new Profesor();
+        profesor.setId(10L);
+
+        Alumno a1 = new Alumno();
+        a1.setId(101L);
+        Alumno a2 = new Alumno();
+        a2.setId(102L);
+
+        when(profesorRepository.findById(10L)).thenReturn(Optional.of(profesor));
+        when(alumnoRepository.findByProfesorId(10L)).thenReturn(List.of(a1, a2));
+
+        List<Alumno> alumnos = profesorService.listarAlumnosAsignados(10L);
+
+        assertEquals(2, alumnos.size());
+        verify(alumnoRepository).findByProfesorId(10L);
+    }
 }
+
