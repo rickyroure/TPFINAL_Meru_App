@@ -127,4 +127,41 @@ public class RutinaService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Profesor no encontrado con ID: " + profesorId));
         return rutinaRepository.findByProfesorId(profesorId);
     }
+
+    @Transactional(readOnly = true)
+    public String exportarRutinaCsv(Long rutinaId) {
+        Rutina rutina = obtenerPorId(rutinaId);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Rutina,Semana,Sesion,Orden,Ejercicio,Series,Repeticiones,PausaSegundos,CargaPct,RPE\n");
+
+        if (rutina.getPlanesEjercicio() != null) {
+            for (PlanEjercicio item : rutina.getPlanesEjercicio()) {
+                String nombreEjercicio = item.getEjercicio() != null ? item.getEjercicio().getNombre() : "";
+                sb.append(escaparCsv(rutina.getNombre())).append(',')
+                        .append(item.getNumeroSemana() != null ? item.getNumeroSemana() : "").append(',')
+                        .append(item.getSesion() != null ? item.getSesion() : "").append(',')
+                        .append(item.getOrden() != null ? item.getOrden() : "").append(',')
+                        .append(escaparCsv(nombreEjercicio)).append(',')
+                        .append(item.getSeries() != null ? item.getSeries() : "").append(',')
+                        .append(item.getReps() != null ? item.getReps() : "").append(',')
+                        .append(item.getPausaSegundos() != null ? item.getPausaSegundos() : "").append(',')
+                        .append(item.getCargaPct() != null ? item.getCargaPct() : "").append(',')
+                        .append(item.getRpe() != null ? item.getRpe() : "")
+                        .append('\n');
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private String escaparCsv(String valor) {
+        if (valor == null) {
+            return "";
+        }
+        if (valor.contains(",") || valor.contains("\"") || valor.contains("\n")) {
+            return "\"" + valor.replace("\"", "\"\"") + "\"";
+        }
+        return valor;
+    }
 }
+
