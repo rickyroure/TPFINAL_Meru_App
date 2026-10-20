@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "25ef6c4f-a5d1-4f00-b843-1bcf52fcf4db",
     "name": "Meru App - Local E2E Suite",
-    "description": "Colección completa para pruebas funcionales y E2E del backend de Meru App, incluyendo autenticación con Keycloak, gestión de roles, rutinas, clases, reservas y pagos.",
+    "description": "Colección completa para pruebas funcionales y E2E del backend de Meru App (36 Historias de Usuario), incluyendo autenticación con Keycloak, gestión de roles, alumnos, profesores, entrenamiento, clases, reservas, pagos, shop y reportes de administración.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -587,6 +587,117 @@
               ]
             }
           }
+        },
+        {
+          "name": "2.6 Editar Perfil Personal de Alumno (A1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Juan Ignacio\",\r\n  \"apellido\": \"Perez\",\r\n  \"telefono\": \"3515551234\",\r\n  \"fechaNacimiento\": \"1998-05-14\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alumnos/1/perfil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos",
+                "1",
+                "perfil"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.7 Actualizar Apto Físico de Alumno (A2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"aptoFisico\": true\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alumnos/1/apto-fisico",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alumnos",
+                "1",
+                "apto-fisico"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.8 Listar Alumnos Asignados al Profesor (P1 y P2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profesores/1/alumnos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profesores",
+                "1",
+                "alumnos"
+              ]
+            }
+          }
         }
       ]
     },
@@ -1035,6 +1146,37 @@
               ]
             }
           }
+        },
+        {
+          "name": "3.14 Exportar Rutina en Formato CSV (E8)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rutinas/1/exportar-csv",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutinas",
+                "1",
+                "exportar-csv"
+              ]
+            }
+          }
         }
       ]
     },
@@ -1436,6 +1578,76 @@
               ]
             }
           }
+        },
+        {
+          "name": "4.13 Marcar Asistencia o Ausencia a Clase (C7 y C8)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"asistio\": true\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservas/1/asistencia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "1",
+                "asistencia"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.14 Consultar Nivel de Ocupación Actual del Gimnasio (C5)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/checkins/ocupacion-actual",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "checkins",
+                "ocupacion-actual"
+              ]
+            }
+          }
         }
       ]
     },
@@ -1811,6 +2023,579 @@
                 "pagos",
                 "webhook",
                 "mercadopago"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.12 Actualizar Tarifa y Duración de Plan (AD3 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Pase Libre Anual Full\",\r\n  \"precio\": 380000.0,\r\n  \"duracionDias\": 365\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/planes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "planes",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Shop (Productos, Órdenes y Stock)",
+      "description": "Gestión de catálogo de productos del shop, creación de órdenes de compra con descuento concurrente de stock al confirmar el pago y reporte de productos más vendidos (SH1 a SH4).",
+      "item": [
+        {
+          "name": "6.1 Crear Producto en el Shop (SH1 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Proteína Whey Isolate 1kg\",\r\n  \"precio\": 45000.0,\r\n  \"stock\": 20\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.2 Editar Precio y Stock de Producto (SH1 y AD3 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Proteína Whey Isolate 1kg\",\r\n  \"precio\": 48500.0,\r\n  \"stock\": 25\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.3 Listar Catálogo de Productos (SH1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.4 Obtener Producto por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.5 Crear Orden de Compra (SH2 - Estado PENDIENTE)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"alumnoId\": 1,\r\n  \"items\": [\r\n    {\r\n      \"productoId\": 1,\r\n      \"cantidad\": 2\r\n    }\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ordenes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ordenes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.6 Obtener Orden por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ordenes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ordenes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.7 Listar Órdenes por Alumno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ordenes/alumno/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ordenes",
+                "alumno",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.8 Pagar Orden del Shop con Efectivo (SH2 y SH3 - Descuenta Stock)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monto\": 97000.0,\r\n  \"metodo\": \"EFECTIVO\",\r\n  \"suscripcionId\": null,\r\n  \"ordenId\": 1\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.9 Pagar Orden del Shop con Mercado Pago (SH3 - Queda Pendiente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monto\": 97000.0,\r\n  \"metodo\": \"MERCADOPAGO\",\r\n  \"suscripcionId\": null,\r\n  \"ordenId\": 1\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.10 Listar Pagos por Orden del Shop (SH3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pagos/orden/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos",
+                "orden",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.11 Reporte de Productos Más Vendidos y Stock por Período (SH4 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos/mas-vendidos?desde=2026-01-01&hasta=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "mas-vendidos"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-12-31"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Administración y Reportes Gerenciales",
+      "description": "Dashboard gerencial y reportes estadísticos para el administrador: composición de alumnos por actividad (AD1), ingresos mensuales y anuales (AD2) y días/horarios de mayor afluencia (AD4).",
+      "item": [
+        {
+          "name": "7.1 Dashboard Composición de Alumnos por Actividad (AD1 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/administracion/dashboard/actividades",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "administracion",
+                "dashboard",
+                "actividades"
+              ]
+            }
+          }
+        },
+        {
+          "name": "7.2 Reporte de Ingresos Anuales y Desglose Mensual (AD2 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/administracion/reportes/ingresos?anio=2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "administracion",
+                "reportes",
+                "ingresos"
+              ],
+              "query": [
+                {
+                  "key": "anio",
+                  "value": "2026"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "7.3 Reporte de Ingresos de un Mes Específico (AD2 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/administracion/reportes/ingresos?anio=2026&mes=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "administracion",
+                "reportes",
+                "ingresos"
+              ],
+              "query": [
+                {
+                  "key": "anio",
+                  "value": "2026"
+                },
+                {
+                  "key": "mes",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "7.4 Reporte de Días y Rangos Horarios de Mayor Afluencia (AD4 - Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/administracion/reportes/afluencia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "administracion",
+                "reportes",
+                "afluencia"
               ]
             }
           }
