@@ -1,6 +1,8 @@
 package com.meru.app.alumnos.service;
 
 import com.meru.app.alumnos.domain.Alumno;
+import com.meru.app.alumnos.dto.ActualizarAptoFisicoRequestDTO;
+import com.meru.app.alumnos.dto.ActualizarPerfilAlumnoRequestDTO;
 import com.meru.app.alumnos.dto.AlumnoRequestDTO;
 import com.meru.app.alumnos.repository.AlumnoRepository;
 import com.meru.app.common.exception.RecursoNoEncontradoException;
@@ -172,4 +174,47 @@ class AlumnoServiceTest {
         assertThrows(RecursoNoEncontradoException.class, () -> alumnoService.asignarProfesor(alumnoId, profesorId));
         verify(alumnoRepository, never()).save(any());
     }
+
+    @Test
+    void actualizarPerfil_debeModificarDatosPersonalesDeUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId(10L);
+        usuario.setNombre("NombreViejo");
+        usuario.setApellido("ApellidoViejo");
+
+        Alumno alumno = new Alumno();
+        alumno.setId(1L);
+        alumno.setUsuario(usuario);
+
+        ActualizarPerfilAlumnoRequestDTO request = new ActualizarPerfilAlumnoRequestDTO(
+                "Juan", "Perez", "3515551234", LocalDate.of(1998, 5, 14)
+        );
+
+        when(alumnoRepository.findById(1L)).thenReturn(Optional.of(alumno));
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Alumno actualizado = alumnoService.actualizarPerfil(1L, request);
+
+        assertEquals("Juan", actualizado.getUsuario().getNombre());
+        assertEquals("Perez", actualizado.getUsuario().getApellido());
+        assertEquals("3515551234", actualizado.getUsuario().getTelefono());
+        assertEquals(LocalDate.of(1998, 5, 14), actualizado.getUsuario().getFechaNacimiento());
+        verify(usuarioRepository).save(usuario);
+    }
+
+    @Test
+    void actualizarAptoFisico_debeModificarEstadoAptoFisico() {
+        Alumno alumno = new Alumno();
+        alumno.setId(1L);
+        alumno.setAptoFisico(false);
+
+        when(alumnoRepository.findById(1L)).thenReturn(Optional.of(alumno));
+        when(alumnoRepository.save(any(Alumno.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Alumno actualizado = alumnoService.actualizarAptoFisico(1L, new ActualizarAptoFisicoRequestDTO(true));
+
+        assertTrue(actualizado.isAptoFisico());
+        verify(alumnoRepository).save(alumno);
+    }
 }
+

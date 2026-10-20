@@ -1,6 +1,8 @@
 package com.meru.app.alumnos.service;
 
 import com.meru.app.alumnos.domain.Alumno;
+import com.meru.app.alumnos.dto.ActualizarAptoFisicoRequestDTO;
+import com.meru.app.alumnos.dto.ActualizarPerfilAlumnoRequestDTO;
 import com.meru.app.alumnos.dto.AlumnoRequestDTO;
 import com.meru.app.alumnos.repository.AlumnoRepository;
 import com.meru.app.common.exception.RecursoNoEncontradoException;
@@ -62,4 +64,24 @@ public class AlumnoService {
         alumno.setProfesor(profesor);
         return alumnoRepository.save(alumno);
     }
+
+    @Transactional
+    public Alumno actualizarPerfil(Long alumnoId, ActualizarPerfilAlumnoRequestDTO request) {
+        Alumno alumno = obtenerAlumno(alumnoId);
+        Usuario usuario = alumno.getUsuario();
+        usuario.setNombre(request.nombre());
+        usuario.setApellido(request.apellido());
+        usuario.setTelefono(request.telefono());
+        usuario.setFechaNacimiento(request.fechaNacimiento());
+        usuarioRepository.save(usuario);
+        return alumno;
+    }
+
+    @Transactional
+    public Alumno actualizarAptoFisico(Long alumnoId, ActualizarAptoFisicoRequestDTO request) {
+        Alumno alumno = obtenerAlumno(alumnoId);
+        alumno.setAptoFisico(Boolean.TRUE.equals(request.aptoFisico()));
+        return alumnoRepository.save(alumno);
+    }
 }
+
