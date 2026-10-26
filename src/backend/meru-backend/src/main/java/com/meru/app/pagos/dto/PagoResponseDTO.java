@@ -16,9 +16,28 @@ public record PagoResponseDTO(
         EstadoPago estado,
         LocalDateTime fecha,
         String referenciaExterna,
-        String mensaje
+        String mensaje,
+        String checkoutUrl
 ) {
+    public PagoResponseDTO(
+            Long id,
+            Long suscripcionId,
+            Long ordenId,
+            BigDecimal monto,
+            MetodoPago metodo,
+            EstadoPago estado,
+            LocalDateTime fecha,
+            String referenciaExterna,
+            String mensaje
+    ) {
+        this(id, suscripcionId, ordenId, monto, metodo, estado, fecha, referenciaExterna, mensaje, null);
+    }
+
     public static PagoResponseDTO fromEntity(Pago pago, String mensaje) {
+        return fromEntity(pago, mensaje, null);
+    }
+
+    public static PagoResponseDTO fromEntity(Pago pago, String mensaje, String checkoutUrl) {
         return new PagoResponseDTO(
                 pago.getId(),
                 pago.getSuscripcion() != null ? pago.getSuscripcion().getId() : null,
@@ -28,7 +47,8 @@ public record PagoResponseDTO(
                 pago.getEstado(),
                 pago.getFecha(),
                 pago.getReferenciaExterna(),
-                mensaje
+                mensaje,
+                checkoutUrl
         );
     }
 }

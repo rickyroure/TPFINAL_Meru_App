@@ -25,8 +25,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas de Swagger / OpenAPI
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        // Rutas públicas de prueba o webhooks futuros
-                        .requestMatchers("/api/public/**").permitAll()
+                        // Rutas públicas de prueba y Webhook de Mercado Pago (notificaciones externas sin JWT de Keycloak)
+                        .requestMatchers("/api/public/**", "/pagos/webhook/mercadopago").permitAll()
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated()
                 )

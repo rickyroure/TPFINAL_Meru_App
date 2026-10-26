@@ -10,6 +10,7 @@ import com.meru.app.pagos.dto.ProcesarPagoRequestDTO;
 import com.meru.app.pagos.event.PagoConfirmadoEvent;
 import com.meru.app.pagos.repository.PagoRepository;
 import com.meru.app.pagos.repository.SuscripcionRepository;
+import com.meru.app.pagos.strategy.MercadoPagoProcessor;
 import com.meru.app.pagos.strategy.PaymentProcessor;
 import com.meru.app.pagos.strategy.ResultadoPago;
 import com.meru.app.pagos.strategy.SolicitudPago;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PagoService {
@@ -72,24 +74,30 @@ public class PagoService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Método de pago no soportado: " + request.metodo()));
 
-        SolicitudPago solicitud = new SolicitudPago(
-                request.monto(),
-                request.metodo(),
-                request.suscripcionId(),
-                request.ordenId()
-        );
-
-        ResultadoPago resultado = processor.procesar(solicitud);
-
         Pago pago = new Pago();
         pago.setSuscripcion(suscripcion);
         pago.setOrdenId(request.ordenId());
         pago.setMonto(request.monto());
         pago.setMetodo(request.metodo());
-        pago.setEstado(resultado.estado());
+        pago.setEstado(EstadoPago.PENDIENTE);
         pago.setFecha(LocalDateTime.now());
-        pago.setReferenciaExterna(resultado.referenciaExterna());
+        pago = pagoRepository.save(pago);
 
+        String descripcion = construirDescripcionConcepto(suscripcion, request.suscripcionId(), request.ordenId());
+
+        SolicitudPago solicitud = new SolicitudPago(
+                request.monto(),
+                request.metodo(),
+                request.suscripcionId(),
+                request.ordenId(),
+                pago.getId(),
+                descripcion
+        );
+
+        ResultadoPago resultado = processor.procesar(solicitud);
+
+        pago.setEstado(resultado.estado());
+        pago.setReferenciaExterna(resultado.referenciaExterna());
         pago = pagoRepository.save(pago);
 
         if (resultado.estado() == EstadoPago.APROBADO) {
@@ -109,7 +117,7 @@ public class PagoService {
             ));
         }
 
-        return PagoResponseDTO.fromEntity(pago, resultado.mensaje());
+        return PagoResponseDTO.fromEntity(pago, resultado.mensaje(), resultado.checkoutUrl());
     }
 
     @Transactional(readOnly = true)
@@ -164,6 +172,69 @@ public class PagoService {
             pago.setEstado(EstadoPago.RECHAZADO);
             pagoRepository.save(pago);
         }
+    }
+
+    @Transactional
+    public void procesarNotificacionWebhookMercadoPago(Map<String, Object> payload, String dataIdParam, String topicParam) {
+        if (payload != null && payload.containsKey("pagoId") && payload.containsKey("estado")) {
+            Long pagoId = Long.valueOf(payload.get("pagoId").toString());
+            String estado = payload.get("estado").toString();
+            procesarWebhookMercadoPago(pagoId, estado);
+            return;
+        }
+
+        Long mpPaymentId = extraerMpPaymentId(payload, dataIdParam, topicParam);
+        if (mpPaymentId == null) {
+            return;
+        }
+
+        MercadoPagoProcessor mpProcessor = processors.stream()
+                .filter(MercadoPagoProcessor.class::isInstance)
+                .map(MercadoPagoProcessor.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Procesador de MercadoPago no disponible"));
+
+        MercadoPagoProcessor.DatosPagoExternoMP datos = mpProcessor.consultarPagoExterno(mpPaymentId);
+        if (datos != null && datos.pagoLocalId() != null && datos.estadoMp() != null) {
+            procesarWebhookMercadoPago(datos.pagoLocalId(), datos.estadoMp());
+        }
+    }
+
+    private Long extraerMpPaymentId(Map<String, Object> payload, String dataIdParam, String topicParam) {
+        String tipoEvento = topicParam;
+        if ((tipoEvento == null || tipoEvento.isBlank()) && payload != null && payload.get("type") != null) {
+            tipoEvento = payload.get("type").toString();
+        }
+        if ((tipoEvento == null || tipoEvento.isBlank()) && payload != null && payload.get("topic") != null) {
+            tipoEvento = payload.get("topic").toString();
+        }
+
+        if (tipoEvento != null && !tipoEvento.isBlank() && !"payment".equalsIgnoreCase(tipoEvento)) {
+            return null;
+        }
+
+        if (dataIdParam != null && !dataIdParam.isBlank()) {
+            return Long.valueOf(dataIdParam.trim());
+        }
+
+        if (payload != null && payload.get("data") instanceof Map<?, ?> dataMap && dataMap.get("id") != null) {
+            return Long.valueOf(dataMap.get("id").toString().trim());
+        }
+
+        return null;
+    }
+
+    private String construirDescripcionConcepto(Suscripcion suscripcion, Long suscripcionId, Long ordenId) {
+        if (suscripcion != null && suscripcion.getPlan() != null && suscripcion.getPlan().getNombre() != null) {
+            return "Meru App - Suscripción " + suscripcion.getPlan().getNombre();
+        }
+        if (suscripcionId != null) {
+            return "Meru App - Suscripción #" + suscripcionId;
+        }
+        if (ordenId != null) {
+            return "Meru App - Orden Shop #" + ordenId;
+        }
+        return "Meru App - Pago";
     }
 
     private Long resolverAlumnoId(Suscripcion suscripcion, Orden orden) {

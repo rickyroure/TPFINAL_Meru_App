@@ -119,4 +119,59 @@ class PagoControllerTest {
                 .andExpect(jsonPath("$[0].id").value(700))
                 .andExpect(jsonPath("$[0].ordenId").value(45));
     }
+
+    @Test
+    void procesarPago_conMercadoPago_debeRetornar201CreatedConCheckoutUrl() throws Exception {
+        ProcesarPagoRequestDTO request = new ProcesarPagoRequestDTO(
+                new BigDecimal("25000.00"),
+                MetodoPago.MERCADOPAGO,
+                1L,
+                null
+        );
+
+        PagoResponseDTO responseDTO = new PagoResponseDTO(
+                701L,
+                1L,
+                null,
+                new BigDecimal("25000.00"),
+                MetodoPago.MERCADOPAGO,
+                EstadoPago.PENDIENTE,
+                LocalDateTime.now(),
+                "198273645-pref-id",
+                "Preferencia de MercadoPago generada exitosamente",
+                "https://sandbox.mercadopago.com.ar/checkout/v1/redirect?pref_id=198273645-pref-id"
+        );
+
+        when(pagoService.procesarPago(any(ProcesarPagoRequestDTO.class))).thenReturn(responseDTO);
+
+        mockMvc.perform(post("/pagos")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_alumno")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(701))
+                .andExpect(jsonPath("$.estado").value("PENDIENTE"))
+                .andExpect(jsonPath("$.metodo").value("MERCADOPAGO"))
+                .andExpect(jsonPath("$.checkoutUrl").value("https://sandbox.mercadopago.com.ar/checkout/v1/redirect?pref_id=198273645-pref-id"));
+    }
+
+    @Test
+    void webhookMercadoPago_debeSerPublicoSinJwt_yRetornar200Ok() throws Exception {
+        String webhookPayload = """
+                {
+                  "action": "payment.created",
+                  "type": "payment",
+                  "data": {
+                    "id": "99887766"
+                  }
+                }
+                """;
+
+        mockMvc.perform(post("/pagos/webhook/mercadopago")
+                        .param("data.id", "99887766")
+                        .param("type", "payment")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(webhookPayload))
+                .andExpect(status().isOk());
+    }
 }

@@ -28,6 +28,7 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,12 +51,14 @@ class PagoServiceTest {
     private ApplicationEventPublisher eventPublisher;
 
     private PagoService pagoService;
+    private MercadoPagoProcessor mercadoPagoProcessor;
 
     @BeforeEach
     void setUp() {
+        mercadoPagoProcessor = spy(new MercadoPagoProcessor());
         List<PaymentProcessor> processors = List.of(
                 new EfectivoProcessor(),
-                new MercadoPagoProcessor()
+                mercadoPagoProcessor
         );
         pagoService = new PagoService(pagoRepository, suscripcionRepository, ordenRepository, processors, eventPublisher);
     }
@@ -139,6 +142,8 @@ class PagoServiceTest {
         assertEquals(EstadoPago.PENDIENTE, response.estado());
         assertEquals(MetodoPago.MERCADOPAGO, response.metodo());
         assertTrue(response.referenciaExterna().startsWith("MP-PREF-"));
+        assertNotNull(response.checkoutUrl());
+        assertTrue(response.checkoutUrl().contains("checkout/v1/redirect?pref_id="));
 
         // No debe activar la suscripción todavía (espera webhook)
         assertEquals(EstadoSuscripcion.VENCIDA, suscripcion.getEstado());
@@ -417,5 +422,40 @@ class PagoServiceTest {
         assertEquals(1, result.size());
         assertEquals(45L, result.getFirst().getOrdenId());
         verify(pagoRepository, times(1)).findByOrdenId(45L);
+    }
+
+    @Test
+    void procesarNotificacionWebhookMercadoPago_conNotificacionRealDeMercadoPago_debeConsultarPagoExternoYAprobarPagoLocal() {
+        Long pagoLocalId = 605L;
+        Long mpPaymentId = 99887766L;
+
+        Pago pago = new Pago();
+        pago.setId(pagoLocalId);
+        pago.setEstado(EstadoPago.PENDIENTE);
+        pago.setMonto(new BigDecimal("25000.00"));
+
+        Suscripcion suscripcion = new Suscripcion();
+        suscripcion.setId(7L);
+        suscripcion.setEstado(EstadoSuscripcion.VENCIDA);
+        pago.setSuscripcion(suscripcion);
+
+        doReturn(new MercadoPagoProcessor.DatosPagoExternoMP(pagoLocalId, "approved"))
+                .when(mercadoPagoProcessor).consultarPagoExterno(mpPaymentId);
+        when(pagoRepository.findById(pagoLocalId)).thenReturn(Optional.of(pago));
+
+        Map<String, Object> payload = Map.of(
+                "action", "payment.created",
+                "type", "payment",
+                "data", Map.of("id", "99887766")
+        );
+
+        pagoService.procesarNotificacionWebhookMercadoPago(payload, null, null);
+
+        assertEquals(EstadoPago.APROBADO, pago.getEstado());
+        assertEquals(EstadoSuscripcion.ACTIVA, suscripcion.getEstado());
+        verify(mercadoPagoProcessor, times(1)).consultarPagoExterno(mpPaymentId);
+        verify(pagoRepository, times(1)).save(pago);
+        verify(suscripcionRepository, times(1)).save(suscripcion);
+        verify(eventPublisher, times(1)).publishEvent(any(PagoConfirmadoEvent.class));
     }
 }

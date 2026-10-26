@@ -8,5 +8,16 @@ public record SolicitudPago(
         BigDecimal monto,
         MetodoPago metodo,
         Long suscripcionId,
-        Long ordenId
-) {}
+        Long ordenId,
+        Long pagoId,
+        String descripcion
+) {
+    public SolicitudPago(
+            BigDecimal monto,
+            MetodoPago metodo,
+            Long suscripcionId,
+            Long ordenId
+    ) {
+        this(monto, metodo, suscripcionId, ordenId, null, null);
+    }
+}

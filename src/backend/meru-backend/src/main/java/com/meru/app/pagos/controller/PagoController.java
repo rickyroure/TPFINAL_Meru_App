@@ -65,15 +65,17 @@ public class PagoController {
     }
 
     @PostMapping("/webhook/mercadopago")
-    @Operation(summary = "Webhook idempotente de confirmación de pagos de MercadoPago")
-    public ResponseEntity<Void> webhookMercadoPago(@RequestBody Map<String, Object> payload) {
-        // En una implementación real, extraeríamos el ID del pago o referencia del payload.
-        // Simularemos que el payload contiene "pagoId" y "estado" ("approved", "rejected").
-        if (payload.containsKey("pagoId") && payload.containsKey("estado")) {
-            Long pagoId = Long.valueOf(payload.get("pagoId").toString());
-            String estado = payload.get("estado").toString();
-            pagoService.procesarWebhookMercadoPago(pagoId, estado);
-        }
+    @Operation(summary = "Webhook idempotente de confirmación de pagos de MercadoPago (real y simulado)")
+    public ResponseEntity<Void> webhookMercadoPago(
+            @RequestParam(name = "data.id", required = false) String dataId,
+            @RequestParam(name = "id", required = false) String idParam,
+            @RequestParam(name = "type", required = false) String type,
+            @RequestParam(name = "topic", required = false) String topic,
+            @RequestBody(required = false) Map<String, Object> payload
+    ) {
+        String resolvedDataId = (dataId != null && !dataId.isBlank()) ? dataId : idParam;
+        String resolvedTopic = (type != null && !type.isBlank()) ? type : topic;
+        pagoService.procesarNotificacionWebhookMercadoPago(payload, resolvedDataId, resolvedTopic);
         return ResponseEntity.ok().build();
     }
 }
