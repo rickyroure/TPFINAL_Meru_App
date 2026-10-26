@@ -8,6 +8,8 @@ import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
+import com.mercadopago.net.MPResultsResourcesPage;
+import com.mercadopago.net.MPSearchRequest;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 import com.meru.app.pagos.domain.EstadoPago;
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -121,8 +125,11 @@ public class MercadoPagoProcessor implements PaymentProcessor {
             PreferenceRequest.PreferenceRequestBuilder requestBuilder = PreferenceRequest.builder()
                     .items(List.of(itemRequest))
                     .backUrls(backUrls)
-                    .autoReturn("approved")
                     .externalReference(externalReference);
+
+            if (esBackUrlPublicaParaAutoReturn(backUrlSuccess)) {
+                requestBuilder.autoReturn("approved");
+            }
 
             if (!notificationUrl.isBlank()) {
                 requestBuilder.notificationUrl(notificationUrl);
@@ -173,9 +180,48 @@ public class MercadoPagoProcessor implements PaymentProcessor {
         }
     }
 
+    public Optional<String> consultarEstadoPorReferenciaExterna(Long pagoLocalId) {
+        if (accessToken.isBlank() || pagoLocalId == null) {
+            return Optional.empty();
+        }
+        try {
+            MercadoPagoConfig.setAccessToken(accessToken);
+            MPSearchRequest searchRequest = MPSearchRequest.builder()
+                    .offset(0)
+                    .limit(5)
+                    .filters(Map.of("external_reference", String.valueOf(pagoLocalId)))
+                    .build();
+
+            MPResultsResourcesPage<Payment> page = paymentClient.search(searchRequest);
+            if (page == null || page.getResults() == null || page.getResults().isEmpty()) {
+                return Optional.empty();
+            }
+
+            return page.getResults().stream()
+                    .map(Payment::getStatus)
+                    .filter(status -> status != null && !status.isBlank())
+                    .sorted((a, b) -> "approved".equalsIgnoreCase(a) ? -1 : ("approved".equalsIgnoreCase(b) ? 1 : 0))
+                    .findFirst();
+        } catch (Exception ex) {
+            log.warn("No se pudo sincronizar automáticamente el estado del pago {} con Mercado Pago: {}",
+                    pagoLocalId, ex.getMessage());
+            return Optional.empty();
+        }
+    }
+
     @Override
     public MetodoPago metodoSoportado() {
         return MetodoPago.MERCADOPAGO;
+    }
+
+    private boolean esBackUrlPublicaParaAutoReturn(String url) {
+        if (url == null || url.isBlank()) {
+            return false;
+        }
+        String lower = url.trim().toLowerCase();
+        return lower.startsWith("https://")
+                && !lower.contains("localhost")
+                && !lower.contains("127.0.0.1");
     }
 
     private String construirTituloPorDefecto(SolicitudPago solicitud) {

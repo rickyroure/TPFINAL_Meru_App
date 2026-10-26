@@ -120,25 +120,48 @@ public class PagoService {
         return PagoResponseDTO.fromEntity(pago, resultado.mensaje(), resultado.checkoutUrl());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Pago> listarPorSuscripcion(Long suscripcionId) {
-        return pagoRepository.findBySuscripcionId(suscripcionId);
+        List<Pago> pagos = pagoRepository.findBySuscripcionId(suscripcionId);
+        pagos.forEach(this::sincronizarPagoPendienteConMercadoPago);
+        return pagos;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Pago> listarPorOrden(Long ordenId) {
-        return pagoRepository.findByOrdenId(ordenId);
+        List<Pago> pagos = pagoRepository.findByOrdenId(ordenId);
+        pagos.forEach(this::sincronizarPagoPendienteConMercadoPago);
+        return pagos;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Pago obtenerPorId(Long id) {
-        return pagoRepository.findById(id)
+        Pago pago = pagoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Pago no encontrado con ID: " + id));
+        sincronizarPagoPendienteConMercadoPago(pago);
+        return pago;
+    }
+
+    private void sincronizarPagoPendienteConMercadoPago(Pago pago) {
+        if (pago == null
+                || pago.getId() == null
+                || pago.getEstado() != EstadoPago.PENDIENTE
+                || pago.getMetodo() != com.meru.app.pagos.domain.MetodoPago.MERCADOPAGO) {
+            return;
+        }
+
+        processors.stream()
+                .filter(MercadoPagoProcessor.class::isInstance)
+                .map(MercadoPagoProcessor.class::cast)
+                .findFirst()
+                .flatMap(mp -> mp.consultarEstadoPorReferenciaExterna(pago.getId()))
+                .ifPresent(estadoMp -> procesarWebhookMercadoPago(pago.getId(), estadoMp));
     }
 
     @Transactional
     public void procesarWebhookMercadoPago(Long pagoId, String estadoMp) {
-        Pago pago = obtenerPorId(pagoId);
+        Pago pago = pagoRepository.findById(pagoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pago no encontrado con ID: " + pagoId));
 
         if (pago.getEstado() == EstadoPago.APROBADO) {
             // Idempotencia estricta: ya está APROBADO, no hacer nada

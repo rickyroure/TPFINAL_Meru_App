@@ -98,7 +98,7 @@ class MercadoPagoProcessorTest {
 
         PreferenceRequest sentRequest = captor.getValue();
         assertEquals("42", sentRequest.getExternalReference());
-        assertEquals("approved", sentRequest.getAutoReturn());
+        assertNull(sentRequest.getAutoReturn());
         assertEquals("https://meru.ngrok-free.app/api/v1/pagos/webhook/mercadopago", sentRequest.getNotificationUrl());
         assertEquals(1, sentRequest.getItems().size());
         assertEquals("Meru App - Suscripción Plan Libre", sentRequest.getItems().getFirst().getTitle());
