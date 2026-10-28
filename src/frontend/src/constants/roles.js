@@ -1,9 +1,9 @@
-// Roles de la aplicación. Cuando se defina el proveedor de autenticación
-// (Keycloak, Supabase, etc.) hay que alinear estos valores con los roles del backend.
+// Roles de la aplicación. Coinciden con los roles del realm de Keycloak
+// (alumno, profesor, admin), que el backend lee del token.
 export const ROLES = {
-  ALUMNO: 'ALUMNO',
-  PROFESOR: 'PROFESOR',
-  ADMIN: 'ADMIN',
+  ALUMNO: 'alumno',
+  PROFESOR: 'profesor',
+  ADMIN: 'admin',
 }
 
 // A qué panel va cada rol después de iniciar sesión.

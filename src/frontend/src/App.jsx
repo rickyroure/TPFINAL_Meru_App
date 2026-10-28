@@ -6,6 +6,8 @@ import DashboardLayout from './layouts/DashboardLayout'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import InicioAlumno from './pages/alumno/InicioAlumno'
+import MiPerfil from './pages/alumno/MiPerfil'
+import MiRutina from './pages/alumno/MiRutina'
 import InicioProfesor from './pages/profesor/InicioProfesor'
 import InicioAdmin from './pages/admin/InicioAdmin'
 
@@ -24,6 +26,8 @@ export default function App() {
       <Route element={<ProtectedRoute rol={ROLES.ALUMNO} />}>
         <Route element={<DashboardLayout />}>
           <Route path="/alumno" element={<InicioAlumno />} />
+          <Route path="/alumno/perfil" element={<MiPerfil />} />
+          <Route path="/alumno/rutina" element={<MiRutina />} />
         </Route>
       </Route>
 

@@ -6,7 +6,8 @@ import { ROLES } from './roles'
 export const MENU_POR_ROL = {
   [ROLES.ALUMNO]: [
     { label: 'Inicio', to: '/alumno', disponible: true },
-    { label: 'Mi rutina', disponible: false },
+    { label: 'Mi perfil', to: '/alumno/perfil', disponible: true },
+    { label: 'Mi rutina', to: '/alumno/rutina', disponible: true },
     { label: 'Clases', disponible: false },
     { label: 'Mi plan', disponible: false },
     { label: 'Shop', disponible: false },

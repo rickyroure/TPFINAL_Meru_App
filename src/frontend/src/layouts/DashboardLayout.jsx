@@ -49,7 +49,7 @@ export default function DashboardLayout() {
 
         <div className="border-t border-neutral-800 pt-4">
           <p className="text-sm font-medium">{usuario.nombre}</p>
-          <p className="mb-3 text-xs text-neutral-500">{usuario.rol}</p>
+          <p className="mb-3 text-xs capitalize text-neutral-500">{usuario.rol}</p>
           <button
             onClick={cerrarSesion}
             className="w-full rounded-lg border border-neutral-700 px-3 py-2 text-sm transition hover:bg-neutral-800"
