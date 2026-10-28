@@ -8,23 +8,24 @@ const CLAVE_PROGRESO = 'meru_mock_progreso'
 const demora = (ms = 400) => new Promise((resolve) => setTimeout(resolve, ms))
 
 // Arma los ejercicios de una sesión. Los IDs son únicos para que cada uno tenga su propio progreso.
-function armarItems() {
+// El backend exige que la sesión sea una letra de la A a la E (PlanEjercicioItemDTO).
+function armarItems(semanas, primerId) {
   const sesiones = {
-    'Día A': [
+    A: [
       ['Sentadilla', 4, 8, 120, 70, 7],
       ['Press de banca', 4, 8, 90, 70, 7],
       ['Remo con barra', 3, 10, 90, 65, 7],
     ],
-    'Día B': [
+    B: [
       ['Peso muerto', 3, 5, 180, 75, 8],
       ['Press militar', 3, 8, 90, 65, 7],
       ['Dominadas', 3, 6, 90, null, 8],
     ],
   }
   const items = []
-  let id = 1
+  let id = primerId
   let ejercicioId = 1
-  for (const semana of [1, 2, 3, 4]) {
+  for (const semana of semanas) {
     for (const [sesion, ejercicios] of Object.entries(sesiones)) {
       ejercicios.forEach(([nombre, series, reps, pausa, carga, rpe], indice) => {
         items.push({
@@ -58,7 +59,19 @@ const RUTINAS = [
     nombre: 'Fuerza e hipertrofia',
     fechaInicio: '2026-10-05',
     duracionSemanas: 4,
-    items: armarItems(),
+    items: armarItems([1, 2, 3, 4], 1),
+  },
+  {
+    id: 2,
+    profesorId: 1,
+    nombreProfesor: 'Profesor Demo',
+    alumnoId: 3,
+    nombreAlumno: 'Mateo Gómez',
+    nombre: 'Adaptación al gimnasio',
+    fechaInicio: '2026-10-19',
+    duracionSemanas: 2,
+    // Los IDs arrancan en 1000 para no pisar los de la rutina 1 (el progreso se guarda por ID).
+    items: armarItems([1, 2], 1000),
   },
 ]
 

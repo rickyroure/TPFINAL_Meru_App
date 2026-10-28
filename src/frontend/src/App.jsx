@@ -12,6 +12,8 @@ import Clases from './pages/alumno/Clases'
 import MiPlan from './pages/alumno/MiPlan'
 import InicioProfesor from './pages/profesor/InicioProfesor'
 import InicioAdmin from './pages/admin/InicioAdmin'
+import MisAlumnos from './pages/profesor/MisAlumnos'
+import DetalleAlumno from './pages/profesor/DetalleAlumno'
 
 // La ruta "/" manda al login o al panel que corresponda según la sesión.
 function RedirigirSegunSesion() {
@@ -38,6 +40,8 @@ export default function App() {
       <Route element={<ProtectedRoute rol={ROLES.PROFESOR} />}>
         <Route element={<DashboardLayout />}>
           <Route path="/profesor" element={<InicioProfesor />} />
+          <Route path="/profesor/alumnos" element={<MisAlumnos />} />
+          <Route path="/profesor/alumnos/:alumnoId" element={<DetalleAlumno />} />  
         </Route>
       </Route>
 

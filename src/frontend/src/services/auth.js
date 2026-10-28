@@ -14,8 +14,9 @@ const CLAVE_SESION = 'meru_sesion'
 
 const USUARIOS_DEMO = [
   { id: 1, nombre: 'Admin Demo', email: 'admin@meru.com', password: 'admin123', rol: ROLES.ADMIN },
-  { id: 2, nombre: 'Profesor Demo', email: 'profesor@meru.com', password: 'profe123', rol: ROLES.PROFESOR },
-  // alumnoId es el ID de la tabla "alumno": es el que piden los endpoints (/alumnos/{id}).
+  // profesorId / alumnoId son los IDs de las tablas "profesor" y "alumno":
+  // son los que piden los endpoints (/profesores/{id}/alumnos, /alumnos/{id}).
+  { id: 2, nombre: 'Profesor Demo', email: 'profesor@meru.com', password: 'profe123', rol: ROLES.PROFESOR, profesorId: 1 },
   { id: 3, nombre: 'Alumno Demo', email: 'alumno@meru.com', password: 'alumno123', rol: ROLES.ALUMNO, alumnoId: 1 },
 ]
 
@@ -38,6 +39,7 @@ export const authService = {
       email: usuario.email,
       rol: usuario.rol,
       alumnoId: usuario.alumnoId ?? null,
+      profesorId: usuario.profesorId ?? null,
     }
     localStorage.setItem(CLAVE_SESION, JSON.stringify(sesion))
     return sesion

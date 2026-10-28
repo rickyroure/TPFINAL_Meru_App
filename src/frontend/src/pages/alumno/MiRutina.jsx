@@ -209,7 +209,7 @@ export default function MiRutina() {
 
       {sesiones.map((sesion) => (
         <section key={sesion} className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold text-emerald-500">{sesion}</h3>
+          <h3 className="mb-3 text-lg font-semibold text-emerald-500">Sesión {sesion}</h3>
           <div className="flex flex-col gap-4">
             {itemsDeLaSemana
               .filter((i) => i.sesion === sesion)
