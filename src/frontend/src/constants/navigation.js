@@ -15,7 +15,7 @@ export const MENU_POR_ROL = {
   [ROLES.PROFESOR]: [
     { label: 'Inicio', to: '/profesor', disponible: true },
     { label: 'Mis alumnos', to: '/profesor/alumnos', disponible: true },
-    { label: 'Rutinas', disponible: false },
+    { label: 'Rutinas', to: '/profesor/rutinas', disponible: true },
     { label: 'Clases', disponible: false },
   ],
   [ROLES.ADMIN]: [

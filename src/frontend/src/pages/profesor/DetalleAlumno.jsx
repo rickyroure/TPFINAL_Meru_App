@@ -123,7 +123,7 @@ export default function DetalleAlumno() {
   }
 
   // Por ahora se muestra la primera rutina asignada.
-  const rutina = rutinas[0]
+  const rutina = rutinas[rutinas.length - 1]
   const semanas = rutina ? [...new Set(rutina.items.map((i) => i.numeroSemana))].sort((a, b) => a - b) : []
   const itemsDeLaSemana = rutina ? rutina.items.filter((i) => i.numeroSemana === semana) : []
   const sesiones = [...new Set(itemsDeLaSemana.map((i) => i.sesion))].sort()

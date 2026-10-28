@@ -12,6 +12,27 @@ export const rutinasService = {
     return data
   },
 
+  // GET /rutinas/profesor/{profesorId}: plantillas (alumnoId null) y rutinas ya asignadas.
+  async listarPorProfesor(profesorId) {
+    if (USE_MOCK) return mock.listarRutinasPorProfesor(profesorId)
+    const { data } = await api.get(`/rutinas/profesor/${profesorId}`)
+    return data
+  },
+
+  // POST /rutinas/plantillas
+  async crearPlantilla(datos) {
+    if (USE_MOCK) return mock.crearPlantilla(datos)
+    const { data } = await api.post('/rutinas/plantillas', datos)
+    return data
+  },
+
+  // POST /rutinas/{rutinaId}/asignar
+  async asignar(rutinaId, datos) {
+    if (USE_MOCK) return mock.asignarRutina(rutinaId, datos)
+    const { data } = await api.post(`/rutinas/${rutinaId}/asignar`, datos)
+    return data
+  },
+
   // GET /progreso-sets/plan-ejercicio/{planEjercicioId}
   async listarProgreso(planEjercicioId) {
     if (USE_MOCK) return mock.listarProgresoPorPlanEjercicio(planEjercicioId)
