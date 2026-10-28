@@ -9,6 +9,7 @@ import InicioAlumno from './pages/alumno/InicioAlumno'
 import MiPerfil from './pages/alumno/MiPerfil'
 import MiRutina from './pages/alumno/MiRutina'
 import Clases from './pages/alumno/Clases'
+import MiPlan from './pages/alumno/MiPlan'
 import InicioProfesor from './pages/profesor/InicioProfesor'
 import InicioAdmin from './pages/admin/InicioAdmin'
 
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/alumno/perfil" element={<MiPerfil />} />
           <Route path="/alumno/rutina" element={<MiRutina />} />
           <Route path="/alumno/clases" element={<Clases />} />
+          <Route path="/alumno/plan" element={<MiPlan />} />
         </Route>
       </Route>
 

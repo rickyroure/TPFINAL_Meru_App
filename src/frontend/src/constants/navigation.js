@@ -9,7 +9,7 @@ export const MENU_POR_ROL = {
     { label: 'Mi perfil', to: '/alumno/perfil', disponible: true },
     { label: 'Mi rutina', to: '/alumno/rutina', disponible: true },
     { label: 'Clases', to: '/alumno/clases', disponible: true },
-    { label: 'Mi plan', disponible: false },
+    { label: 'Mi plan', to: '/alumno/plan', disponible: true },
     { label: 'Shop', disponible: false },
   ],
   [ROLES.PROFESOR]: [
