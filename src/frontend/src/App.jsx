@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound'
 import InicioAlumno from './pages/alumno/InicioAlumno'
 import MiPerfil from './pages/alumno/MiPerfil'
 import MiRutina from './pages/alumno/MiRutina'
+import Clases from './pages/alumno/Clases'
 import InicioProfesor from './pages/profesor/InicioProfesor'
 import InicioAdmin from './pages/admin/InicioAdmin'
 
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/alumno" element={<InicioAlumno />} />
           <Route path="/alumno/perfil" element={<MiPerfil />} />
           <Route path="/alumno/rutina" element={<MiRutina />} />
+          <Route path="/alumno/clases" element={<Clases />} />
         </Route>
       </Route>
 

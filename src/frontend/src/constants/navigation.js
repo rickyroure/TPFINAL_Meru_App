@@ -8,7 +8,7 @@ export const MENU_POR_ROL = {
     { label: 'Inicio', to: '/alumno', disponible: true },
     { label: 'Mi perfil', to: '/alumno/perfil', disponible: true },
     { label: 'Mi rutina', to: '/alumno/rutina', disponible: true },
-    { label: 'Clases', disponible: false },
+    { label: 'Clases', to: '/alumno/clases', disponible: true },
     { label: 'Mi plan', disponible: false },
     { label: 'Shop', disponible: false },
   ],
