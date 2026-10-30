@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { profesoresService } from '../../services/profesores'
 import { rutinasService } from '../../services/rutinas'
 import { mensajeDeError } from '../../utils/errores'
-
+import Seccion1RM from '../../components/Seccion1RM'
 function Dato({ titulo, valor }) {
   return (
     <div className="rounded-lg bg-neutral-950 px-3 py-2 text-center">
@@ -146,7 +146,7 @@ export default function DetalleAlumno() {
       <p className="mb-6 text-sm text-neutral-400">
         {alumno.email} · Ingresó el {alumno.fechaIngreso}
       </p>
-
+      <Seccion1RM alumnoId={id} />
       {!rutina ? (
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 text-neutral-400">
           Este alumno todavía no tiene una rutina asignada.
