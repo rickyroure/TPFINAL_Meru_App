@@ -12,6 +12,20 @@ export const planesService = {
     return data
   },
 
+  // POST /planes (solo admin)
+  async crearPlan(datos) {
+    if (USE_MOCK) return mock.crearPlan(datos)
+    const { data } = await api.post('/planes', datos)
+    return data
+  },
+
+  // PUT /planes/{id} (solo admin)
+  async actualizarPlan(id, datos) {
+    if (USE_MOCK) return mock.actualizarPlan(id, datos)
+    const { data } = await api.put(`/planes/${id}`, datos)
+    return data
+  },
+
   // GET /suscripciones/alumno/{alumnoId}
   async listarSuscripcionesDelAlumno(alumnoId) {
     if (USE_MOCK) return mock.listarSuscripcionesPorAlumno(alumnoId)

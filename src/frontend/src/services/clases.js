@@ -12,6 +12,20 @@ export const clasesService = {
     return data
   },
 
+  // GET /clases (sin filtros: incluye las que ya pasaron). Para el admin.
+  async listarTodas() {
+    if (USE_MOCK) return mock.listarTodasLasClases()
+    const { data } = await api.get('/clases')
+    return data
+  },
+
+  // POST /clases
+  async crear(datos) {
+    if (USE_MOCK) return mock.crearClase(datos)
+    const { data } = await api.post('/clases', datos)
+    return data
+  },
+
   // GET /reservas/alumno/{alumnoId}
   async listarReservasDelAlumno(alumnoId) {
     if (USE_MOCK) return mock.listarReservasPorAlumno(alumnoId)

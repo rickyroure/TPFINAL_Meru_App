@@ -1,16 +1,17 @@
 // Datos de prueba que imitan las respuestas del backend:
-//  - PlanResponseDTO (GET /planes)
+//  - PlanResponseDTO (GET /planes, POST /planes, PUT /planes/{id})
 //  - SuscripcionResponseDTO (GET /suscripciones/alumno/{id}, POST /suscripciones)
 //  - PagoResponseDTO (POST /pagos)
-// Las suscripciones se guardan en el navegador para que no se pierdan al recargar.
+// Los planes y las suscripciones se guardan en el navegador para que no se pierdan al recargar.
 // Los precios son inventados, solo para el prototipo.
 
 const CLAVE = 'meru_mock_suscripciones'
+const CLAVE_PLANES = 'meru_mock_planes'
 const DIA = 24 * 60 * 60 * 1000
 
 const demora = (ms = 350) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const PLANES = [
+const PLANES_INICIALES = [
   { id: 1, nombre: 'Mensual', precio: 25000, duracionDias: 30 },
   { id: 2, nombre: 'Trimestral', precio: 65000, duracionDias: 90 },
   { id: 3, nombre: 'Anual', precio: 220000, duracionDias: 365 },
@@ -61,9 +62,55 @@ function leer() {
   return inicial
 }
 
+function leerPlanes() {
+  try {
+    const guardado = JSON.parse(localStorage.getItem(CLAVE_PLANES))
+    if (guardado) return guardado
+  } catch {
+    // Si el dato guardado está dañado se empieza de cero.
+  }
+  localStorage.setItem(CLAVE_PLANES, JSON.stringify(PLANES_INICIALES))
+  return PLANES_INICIALES
+}
+
+// Mismas validaciones que CrearPlanRequestDTO del backend.
+function validarPlan({ nombre, precio, duracionDias }) {
+  if (!nombre || !nombre.trim()) throw new Error('El nombre del plan es obligatorio')
+  if (precio === null || Number.isNaN(precio)) throw new Error('El precio es obligatorio')
+  if (precio < 0) throw new Error('El precio no puede ser negativo')
+  if (duracionDias === null || Number.isNaN(duracionDias)) throw new Error('La duración en días es obligatoria')
+  if (!Number.isInteger(duracionDias) || duracionDias < 1) throw new Error('La duración mínima es de 1 día')
+}
+
 export async function listarPlanes() {
   await demora()
-  return PLANES
+  return leerPlanes()
+}
+
+// POST /planes
+export async function crearPlan(datos) {
+  await demora(450)
+  validarPlan(datos)
+  const planes = leerPlanes()
+  const nuevo = {
+    id: Math.max(0, ...planes.map((p) => p.id)) + 1,
+    nombre: datos.nombre.trim(),
+    precio: datos.precio,
+    duracionDias: datos.duracionDias,
+  }
+  localStorage.setItem(CLAVE_PLANES, JSON.stringify([...planes, nuevo]))
+  return nuevo
+}
+
+// PUT /planes/{id}
+export async function actualizarPlan(id, datos) {
+  await demora(450)
+  validarPlan(datos)
+  const planes = leerPlanes()
+  if (!planes.some((p) => p.id === id)) throw new Error(`Plan no encontrado con ID: ${id}`)
+  const actualizado = { id, nombre: datos.nombre.trim(), precio: datos.precio, duracionDias: datos.duracionDias }
+  localStorage.setItem(CLAVE_PLANES, JSON.stringify(planes.map((p) => (p.id === id ? actualizado : p))))
+  return actualizado
 }
 
 export async function listarSuscripcionesPorAlumno(alumnoId) {
