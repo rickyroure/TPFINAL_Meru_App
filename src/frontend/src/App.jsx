@@ -1,0 +1,67 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { useAuth } from './hooks/useAuth'
+import { ROLES, RUTA_POR_ROL } from './constants/roles'
+import ProtectedRoute from './routes/ProtectedRoute'
+import DashboardLayout from './layouts/DashboardLayout'
+import Login from './pages/Login'
+import NotFound from './pages/NotFound'
+import InicioAlumno from './pages/alumno/InicioAlumno'
+import MiPerfil from './pages/alumno/MiPerfil'
+import MiRutina from './pages/alumno/MiRutina'
+import Clases from './pages/alumno/Clases'
+import MiPlan from './pages/alumno/MiPlan'
+import InicioProfesor from './pages/profesor/InicioProfesor'
+import InicioAdmin from './pages/admin/InicioAdmin'
+import MisAlumnos from './pages/profesor/MisAlumnos'
+import DetalleAlumno from './pages/profesor/DetalleAlumno'
+import Rutinas from './pages/profesor/Rutinas'
+import NuevaRutina from './pages/profesor/NuevaRutina'
+import PlanesYTarifas from './pages/admin/PlanesYTarifas'
+import GestionClases from './pages/admin/GestionClases'
+import Reportes from './pages/admin/Reportes'
+
+// La ruta "/" manda al login o al panel que corresponda según la sesión.
+function RedirigirSegunSesion() {
+  const { usuario } = useAuth()
+  return <Navigate to={usuario ? RUTA_POR_ROL[usuario.rol] : '/login'} replace />
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<RedirigirSegunSesion />} />
+      <Route path="/login" element={<Login />} />
+
+      <Route element={<ProtectedRoute rol={ROLES.ALUMNO} />}>
+        <Route element={<DashboardLayout />}>
+          <Route path="/alumno" element={<InicioAlumno />} />
+          <Route path="/alumno/perfil" element={<MiPerfil />} />
+          <Route path="/alumno/rutina" element={<MiRutina />} />
+          <Route path="/alumno/clases" element={<Clases />} />
+          <Route path="/alumno/plan" element={<MiPlan />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute rol={ROLES.PROFESOR} />}>
+        <Route element={<DashboardLayout />}>
+          <Route path="/profesor" element={<InicioProfesor />} />
+          <Route path="/profesor/alumnos" element={<MisAlumnos />} />
+          <Route path="/profesor/alumnos/:alumnoId" element={<DetalleAlumno />} /> 
+          <Route path="/profesor/rutinas" element={<Rutinas />} />
+          <Route path="/profesor/rutinas/nueva" element={<NuevaRutina />} /> 
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute rol={ROLES.ADMIN} />}>
+        <Route element={<DashboardLayout />}>
+          <Route path="/admin" element={<InicioAdmin />} />
+          <Route path="/admin/planes" element={<PlanesYTarifas />} />
+          <Route path="/admin/clases" element={<GestionClases />} />
+          <Route path="/admin/reportes" element={<Reportes />} />
+        </Route>
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  )
+}
