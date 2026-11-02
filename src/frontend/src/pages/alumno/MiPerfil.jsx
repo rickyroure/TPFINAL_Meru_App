@@ -91,7 +91,7 @@ function FormularioPerfil({ perfil, alumnoId, alGuardar }) {
 }
 
 export default function MiPerfil() {
-  const { usuario } = useAuth()
+  const { usuario, actualizarUsuario } = useAuth()
   const [perfil, setPerfil] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
@@ -115,6 +115,15 @@ export default function MiPerfil() {
     }
   }, [usuario.alumnoId])
 
+  const alGuardarPerfil = (actualizado) => {
+    setPerfil(actualizado)
+    if (actualizarUsuario && actualizado?.nombre) {
+      actualizarUsuario({
+        nombre: `${actualizado.nombre} ${actualizado.apellido ?? ''}`.trim(),
+      })
+    }
+  }
+
   if (cargando) return <p className="text-neutral-400">Cargando perfil...</p>
   if (error) return <p className="text-red-400">{error}</p>
 
@@ -127,7 +136,7 @@ export default function MiPerfil() {
 
       <section className="mb-6 rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
         <h3 className="mb-4 font-semibold">Datos personales</h3>
-        <FormularioPerfil perfil={perfil} alumnoId={usuario.alumnoId} alGuardar={setPerfil} />
+        <FormularioPerfil perfil={perfil} alumnoId={usuario.alumnoId} alGuardar={alGuardarPerfil} />
       </section>
 
       <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">

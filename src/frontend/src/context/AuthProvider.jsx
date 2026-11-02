@@ -12,13 +12,18 @@ export default function AuthProvider({ children }) {
     return sesion
   }
 
+  const actualizarUsuario = (parcial) => {
+    const sesion = authService.actualizarSesion(parcial)
+    if (sesion) setUsuario(sesion)
+  }
+
   const logout = () => {
     authService.logout()
     setUsuario(null)
   }
 
   return (
-    <AuthContext.Provider value={{ usuario, login, logout }}>
+    <AuthContext.Provider value={{ usuario, login, actualizarUsuario, logout }}>
       {children}
     </AuthContext.Provider>
   )

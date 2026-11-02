@@ -2,6 +2,19 @@ import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { RUTA_POR_ROL } from '../constants/roles'
+import { USE_MOCK } from '../config'
+
+const CUENTAS_PRUEBA = USE_MOCK
+  ? [
+      { etiqueta: 'Alumno', usuario: 'alumno@meru.com', password: 'alumno123' },
+      { etiqueta: 'Profesor', usuario: 'profesor@meru.com', password: 'profe123' },
+      { etiqueta: 'Admin', usuario: 'admin@meru.com', password: 'admin123' },
+    ]
+  : [
+      { etiqueta: 'Alumno', usuario: 'alumno.test', password: 'alumno1234' },
+      { etiqueta: 'Profesor', usuario: 'profesor.test', password: 'profesor1234' },
+      { etiqueta: 'Admin', usuario: 'admin.test', password: 'admin1234' },
+    ]
 
 export default function Login() {
   const { usuario, login } = useAuth()
@@ -30,6 +43,12 @@ export default function Login() {
     }
   }
 
+  const autocompletar = (cuenta) => {
+    setEmail(cuenta.usuario)
+    setPassword(cuenta.password)
+    setError('')
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-sm rounded-2xl border border-neutral-800 bg-neutral-900 p-8">
@@ -38,12 +57,14 @@ export default function Login() {
 
         <form onSubmit={enviarFormulario} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1 text-sm">
-            Email
+            Usuario o Email
             <input
-              type="email"
+              type="text"
               required
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder={USE_MOCK ? 'alumno@meru.com' : 'alumno.test'}
               className="rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 outline-none focus:border-emerald-500"
             />
           </label>
@@ -53,6 +74,7 @@ export default function Login() {
             <input
               type="password"
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 outline-none focus:border-emerald-500"
@@ -70,12 +92,25 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Solo para desarrollo: se elimina cuando se conecte la autenticación real. */}
         <div className="mt-6 rounded-lg bg-neutral-950 p-3 text-xs text-neutral-500">
-          <p className="mb-1 font-medium text-neutral-400">Usuarios de prueba</p>
-          <p>alumno@meru.com / alumno123</p>
-          <p>profesor@meru.com / profe123</p>
-          <p>admin@meru.com / admin123</p>
+          <p className="mb-2 font-medium text-neutral-400">
+            Cuentas de prueba ({USE_MOCK ? 'Modo Mock' : 'Keycloak Local'}) — tocá para completar:
+          </p>
+          <div className="flex flex-col gap-1.5">
+            {CUENTAS_PRUEBA.map((c) => (
+              <button
+                key={c.usuario}
+                type="button"
+                onClick={() => autocompletar(c)}
+                className="flex items-center justify-between rounded px-2 py-1 text-left transition hover:bg-neutral-900 hover:text-emerald-400"
+              >
+                <span className="font-medium text-neutral-300">{c.etiqueta}:</span>
+                <span>
+                  {c.usuario} / {c.password}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

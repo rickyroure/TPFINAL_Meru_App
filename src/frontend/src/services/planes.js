@@ -30,6 +30,11 @@ export const planesService = {
   async listarSuscripcionesDelAlumno(alumnoId) {
     if (USE_MOCK) return mock.listarSuscripcionesPorAlumno(alumnoId)
     const { data } = await api.get(`/suscripciones/alumno/${alumnoId}`)
+    if (Array.isArray(data) && data.length > 0) {
+      const ultima = data[data.length - 1]
+      // Sincroniza pagos pendientes de Mercado Pago al volver del Checkout Pro
+      await api.get(`/pagos/suscripcion/${ultima.id}`).catch(() => {})
+    }
     return data
   },
 
