@@ -9,6 +9,8 @@ public record AlumnoResponseDTO(
         String nombre,
         String apellido,
         String email,
+        String telefono,
+        LocalDate fechaNacimiento,
         boolean aptoFisico,
         LocalDate fechaIngreso,
         ProfesorResumenDTO profesor
@@ -19,6 +21,8 @@ public record AlumnoResponseDTO(
                 alumno.getUsuario().getNombre(),
                 alumno.getUsuario().getApellido(),
                 alumno.getUsuario().getEmail(),
+                alumno.getUsuario().getTelefono(),
+                alumno.getUsuario().getFechaNacimiento(),
                 alumno.isAptoFisico(),
                 alumno.getFechaIngreso(),
                 ProfesorResumenDTO.fromEntity(alumno.getProfesor())
