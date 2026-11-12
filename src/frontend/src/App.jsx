@@ -19,6 +19,8 @@ import NuevaRutina from './pages/profesor/NuevaRutina'
 import PlanesYTarifas from './pages/admin/PlanesYTarifas'
 import GestionClases from './pages/admin/GestionClases'
 import Reportes from './pages/admin/Reportes'
+import Shop from './pages/alumno/Shop'
+import Productos from './pages/admin/Productos'
 
 // La ruta "/" manda al login o al panel que corresponda según la sesión.
 function RedirigirSegunSesion() {
@@ -39,6 +41,7 @@ export default function App() {
           <Route path="/alumno/rutina" element={<MiRutina />} />
           <Route path="/alumno/clases" element={<Clases />} />
           <Route path="/alumno/plan" element={<MiPlan />} />
+          <Route path="/alumno/shop" element={<Shop />} />
         </Route>
       </Route>
 
@@ -46,9 +49,9 @@ export default function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/profesor" element={<InicioProfesor />} />
           <Route path="/profesor/alumnos" element={<MisAlumnos />} />
-          <Route path="/profesor/alumnos/:alumnoId" element={<DetalleAlumno />} /> 
+          <Route path="/profesor/alumnos/:alumnoId" element={<DetalleAlumno />} />
           <Route path="/profesor/rutinas" element={<Rutinas />} />
-          <Route path="/profesor/rutinas/nueva" element={<NuevaRutina />} /> 
+          <Route path="/profesor/rutinas/nueva" element={<NuevaRutina />} />
         </Route>
       </Route>
 
@@ -58,6 +61,7 @@ export default function App() {
           <Route path="/admin/planes" element={<PlanesYTarifas />} />
           <Route path="/admin/clases" element={<GestionClases />} />
           <Route path="/admin/reportes" element={<Reportes />} />
+          <Route path="/admin/productos" element={<Productos />} />
         </Route>
       </Route>
 

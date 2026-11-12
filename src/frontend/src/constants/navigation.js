@@ -10,7 +10,7 @@ export const MENU_POR_ROL = {
     { label: 'Mi rutina', to: '/alumno/rutina', disponible: true },
     { label: 'Clases', to: '/alumno/clases', disponible: true },
     { label: 'Mi plan', to: '/alumno/plan', disponible: true },
-    { label: 'Shop', disponible: false },
+    { label: 'Shop', to: '/alumno/shop', disponible: true },
   ],
   [ROLES.PROFESOR]: [
     { label: 'Inicio', to: '/profesor', disponible: true },
@@ -23,6 +23,7 @@ export const MENU_POR_ROL = {
     { label: 'Usuarios', disponible: false },
     { label: 'Clases', to: '/admin/clases', disponible: true },
     { label: 'Planes y tarifas', to: '/admin/planes', disponible: true },
+    { label: 'Productos', to: '/admin/productos', disponible: true },
     { label: 'Reportes', to: '/admin/reportes', disponible: true },
   ],
 }
