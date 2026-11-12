@@ -1,6 +1,7 @@
 // Datos de prueba que imitan las respuestas del backend:
 //  - ClaseResponseDTO (GET /clases, POST /clases)
-//  - ReservaResponseDTO (GET /reservas/alumno/{id}, POST /reservas, PATCH /reservas/{id}/cancelar)
+//  - ReservaResponseDTO (GET /reservas/alumno/{id}, GET /reservas/clase/{id}, POST /reservas,
+//    PATCH /reservas/{id}/cancelar, PATCH /reservas/{id}/asistencia)
 // Las reservas se guardan en el navegador para que no se pierdan al recargar.
 
 const CLAVE = 'meru_mock_clases'
@@ -18,6 +19,20 @@ const DEFINICIONES = [
   { id: 3, tipoActividad: 'Spinning', desdeBaseMin: 24 * 60, cupoMaximo: 8, ocupados: 8 },
   { id: 4, tipoActividad: 'Musculación guiada', desdeBaseMin: 48 * 60, cupoMaximo: 15, ocupados: 5 },
   { id: 5, tipoActividad: 'Pilates', desdeBaseMin: 72 * 60, cupoMaximo: 10, ocupados: 2 },
+  // Clase que ya empezó (hace 3 horas): sirve para ver "Pasadas" en el panel del profesor.
+  { id: 6, tipoActividad: 'Spinning', desdeBaseMin: -180, cupoMaximo: 10, ocupados: 3 },
+]
+
+// Nombres de los alumnos de ejemplo que ocupan los lugares "tomados por otros".
+const NOMBRES_EJEMPLO = [
+  'Lucía Fernández',
+  'Mateo Gómez',
+  'Camila Ruiz',
+  'Santiago Díaz',
+  'Valentina Torres',
+  'Joaquín Silva',
+  'Martina López',
+  'Tomás Herrera',
 ]
 
 // Formato que usa el backend para LocalDateTime: 2026-10-29T18:00:00 (sin zona horaria).
@@ -29,16 +44,19 @@ function aLocalISO(fecha) {
   )
 }
 
-// Estado guardado: { base: milisegundos, reservas: [...] }.
+// Estado guardado: { base: milisegundos, reservas: [...], marcas: { [reservaId]: estado } }.
+// "marcas" guarda la asistencia de los alumnos de ejemplo (los lugares tomados por otros).
 // Pasadas 12 horas se reinicia para que las clases de prueba no queden vencidas.
 function leerEstado() {
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE))
-    if (guardado && Date.now() - guardado.base < DOCE_HORAS) return guardado
+    if (guardado && Date.now() - guardado.base < DOCE_HORAS) {
+      return { ...guardado, marcas: guardado.marcas ?? {} }
+    }
   } catch {
     // Si el dato guardado está dañado se empieza de cero.
   }
-  return { base: Date.now(), reservas: [] }
+  return { base: Date.now(), reservas: [], marcas: {} }
 }
 
 function guardarEstado(estado) {
@@ -55,15 +73,15 @@ function leerCreadas() {
 }
 
 function armarClases(estado) {
+  // Como en el backend, el cupo solo se libera al cancelar: marcar asistencia no lo cambia.
+  const ocupadasPorReservas = (claseId) =>
+    estado.reservas.filter((r) => r.claseId === claseId && r.estado !== 'CANCELADA').length
   const creadas = leerCreadas().map((c) => ({
     ...c,
-    cupoDisponible:
-      c.cupoMaximo - estado.reservas.filter((r) => r.claseId === c.id && r.estado === 'CONFIRMADA').length,
+    cupoDisponible: c.cupoMaximo - ocupadasPorReservas(c.id),
   }))
   const deEjemplo = DEFINICIONES.map((d) => {
-    const confirmadas = estado.reservas.filter(
-      (r) => r.claseId === d.id && r.estado === 'CONFIRMADA',
-    ).length
+    const confirmadas = ocupadasPorReservas(d.id)
     return {
       id: d.id,
       profesorId: 1,
@@ -115,6 +133,62 @@ export async function crearClase({ profesorId, tipoActividad, horario, cupoMaxim
   }
   localStorage.setItem(CLAVE_CREADAS, JSON.stringify([...leerCreadas(), nueva]))
   return { ...nueva, cupoDisponible: cupoMaximo }
+}
+
+// Reservas de los alumnos de ejemplo que ocupan los lugares "tomados por otros".
+function armarInscriptosDeEjemplo(estado) {
+  return DEFINICIONES.flatMap((d) =>
+    Array.from({ length: d.ocupados }, (_, i) => {
+      const id = d.id * 1000 + i + 1
+      return {
+        id,
+        claseId: d.id,
+        tipoActividadClase: d.tipoActividad,
+        horarioClase: aLocalISO(new Date(estado.base + d.desdeBaseMin * MINUTO)),
+        alumnoId: 100 + i,
+        nombreAlumno: NOMBRES_EJEMPLO[i % NOMBRES_EJEMPLO.length],
+        estado: estado.marcas[id] ?? 'CONFIRMADA',
+        fechaReserva: aLocalISO(new Date(estado.base - DOCE_HORAS)),
+      }
+    }),
+  )
+}
+
+// Equivale a GET /reservas/clase/{claseId}: los inscriptos de una clase.
+export async function listarReservasPorClase(claseId) {
+  await demora(250)
+  const estado = leerEstado()
+  guardarEstado(estado)
+  return [
+    ...armarInscriptosDeEjemplo(estado).filter((r) => r.claseId === claseId),
+    ...estado.reservas.filter((r) => r.claseId === claseId),
+  ]
+}
+
+// Equivale a PATCH /reservas/{id}/asistencia. Misma regla que el backend:
+// no se puede registrar asistencia sobre una reserva cancelada.
+export async function marcarAsistencia(reservaId, asistio) {
+  await demora(300)
+  const estado = leerEstado()
+  const nuevoEstado = asistio ? 'ASISTIO' : 'NO_ASISTIO'
+
+  const propia = estado.reservas.find((r) => r.id === reservaId)
+  if (propia) {
+    if (propia.estado === 'CANCELADA') {
+      throw new Error('No se puede registrar asistencia sobre una reserva cancelada')
+    }
+    const actualizada = { ...propia, estado: nuevoEstado }
+    guardarEstado({
+      ...estado,
+      reservas: estado.reservas.map((r) => (r.id === reservaId ? actualizada : r)),
+    })
+    return actualizada
+  }
+
+  const deEjemplo = armarInscriptosDeEjemplo(estado).find((r) => r.id === reservaId)
+  if (!deEjemplo) throw new Error(`Reserva no encontrada con ID: ${reservaId}`)
+  guardarEstado({ ...estado, marcas: { ...estado.marcas, [reservaId]: nuevoEstado } })
+  return { ...deEjemplo, estado: nuevoEstado }
 }
 
 export async function listarReservasPorAlumno(alumnoId) {

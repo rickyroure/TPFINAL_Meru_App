@@ -21,6 +21,7 @@ import GestionClases from './pages/admin/GestionClases'
 import Reportes from './pages/admin/Reportes'
 import Shop from './pages/alumno/Shop'
 import Productos from './pages/admin/Productos'
+import ClasesProfesor from './pages/profesor/ClasesProfesor'
 
 // La ruta "/" manda al login o al panel que corresponda según la sesión.
 function RedirigirSegunSesion() {
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/profesor/alumnos/:alumnoId" element={<DetalleAlumno />} />
           <Route path="/profesor/rutinas" element={<Rutinas />} />
           <Route path="/profesor/rutinas/nueva" element={<NuevaRutina />} />
+          <Route path="/profesor/clases" element={<ClasesProfesor />} />
         </Route>
       </Route>
 

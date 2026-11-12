@@ -19,6 +19,27 @@ export const clasesService = {
     return data
   },
 
+  // Las clases de un profesor. El backend no tiene un endpoint para esto, pero cada
+  // clase trae su "profesorId", así que se piden todas (GET /clases) y se filtran acá.
+  async listarDelProfesor(profesorId) {
+    const todas = await this.listarTodas()
+    return todas.filter((c) => c.profesorId === profesorId)
+  },
+
+  // GET /reservas/clase/{claseId}: los inscriptos de una clase.
+  async listarInscriptos(claseId) {
+    if (USE_MOCK) return mock.listarReservasPorClase(claseId)
+    const { data } = await api.get(`/reservas/clase/${claseId}`)
+    return data
+  },
+
+  // PATCH /reservas/{id}/asistencia
+  async marcarAsistencia(reservaId, asistio) {
+    if (USE_MOCK) return mock.marcarAsistencia(reservaId, asistio)
+    const { data } = await api.patch(`/reservas/${reservaId}/asistencia`, { asistio })
+    return data
+  },
+
   // POST /clases
   async crear(datos) {
     if (USE_MOCK) return mock.crearClase(datos)
