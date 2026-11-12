@@ -78,11 +78,13 @@ export const authService = {
     params.append('password', password)
 
     let accessToken
+    let expiresIn
     try {
       const { data } = await axios.post(tokenUrl, params, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
       accessToken = data.access_token
+      expiresIn = data.expires_in
     } catch (err) {
       if (err.response?.status === 401 || err.response?.status === 400) {
         const desc = err.response?.data?.error_description ?? ''
@@ -106,8 +108,9 @@ export const authService = {
     const nombre = payload.given_name ?? payload.name ?? payload.preferred_username ?? 'Usuario'
     const apellido = payload.family_name ?? 'Meru'
 
-    // Sincronizar identidad en el backend local (POST /auth/sync) y obtener alumnoId / profesorId
-    let syncData = null
+    // Sincronizar identidad en el backend local (POST /auth/sync) y obtener alumnoId / profesorId.
+    // Si falla NO se continúa: usar IDs inventados haría que el usuario vea datos de otra persona.
+    let syncData
     try {
       const { data } = await axios.post(
         `${API_URL}/auth/sync`,
@@ -115,18 +118,32 @@ export const authService = {
         { headers: { Authorization: `Bearer ${accessToken}` } },
       )
       syncData = data
-    } catch {
-      // Si el backend aún no responde en /auth/sync, continuamos con los datos del token
+    } catch (err) {
+      throw new Error(
+        'Te autenticaste en Keycloak, pero no se pudo sincronizar tu cuenta con el servidor Meru. Verificá que el backend esté encendido.',
+        { cause: err },
+      )
+    }
+
+    if (rol === ROLES.ALUMNO && !syncData.alumnoId) {
+      throw new Error('Tu usuario no tiene un perfil de alumno en el sistema.')
+    }
+    if (rol === ROLES.PROFESOR && !syncData.profesorId) {
+      throw new Error(
+        'Tu usuario tiene rol profesor en Keycloak, pero todavía no está dado de alta como profesor en el sistema.',
+      )
     }
 
     const sesion = {
-      id: syncData?.id ?? null,
-      nombre: `${syncData?.nombre ?? nombre} ${syncData?.apellido ?? apellido}`.trim(),
-      email: syncData?.email ?? email,
+      id: syncData.id ?? null,
+      nombre: `${syncData.nombre ?? nombre} ${syncData.apellido ?? apellido}`.trim(),
+      email: syncData.email ?? email,
       rol,
-      alumnoId: syncData?.alumnoId ?? (rol === ROLES.ALUMNO ? 1 : null),
-      profesorId: syncData?.profesorId ?? (rol === ROLES.PROFESOR ? 1 : null),
+      alumnoId: syncData.alumnoId ?? null,
+      profesorId: syncData.profesorId ?? null,
       token: accessToken,
+      // Momento (ms) en que vence el token; con él se detecta una sesión vencida.
+      expiraEn: Date.now() + (expiresIn ?? 300) * 1000,
     }
 
     localStorage.setItem(CLAVE_SESION, JSON.stringify(sesion))
@@ -147,7 +164,13 @@ export const authService = {
 
   obtenerSesion() {
     try {
-      return JSON.parse(localStorage.getItem(CLAVE_SESION))
+      const sesion = JSON.parse(localStorage.getItem(CLAVE_SESION))
+      // Sesión real con token vencido: se descarta y el usuario vuelve al login.
+      if (sesion?.expiraEn && Date.now() >= sesion.expiraEn) {
+        localStorage.removeItem(CLAVE_SESION)
+        return null
+      }
+      return sesion
     } catch {
       return null
     }

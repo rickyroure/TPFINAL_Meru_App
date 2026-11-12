@@ -17,3 +17,17 @@ api.interceptors.request.use((config) => {
   }
   return config
 })
+
+// Si el backend responde 401 (token vencido o inválido) se cierra la sesión
+// y se vuelve al login. En modo mock no hay token, así que no aplica.
+api.interceptors.response.use(
+  (respuesta) => respuesta,
+  (error) => {
+    if (error.response?.status === 401 && authService.obtenerToken()) {
+      authService.logout()
+      window.location.hash = '#/login'
+      window.location.reload()
+    }
+    return Promise.reject(error)
+  },
+)
