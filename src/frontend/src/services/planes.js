@@ -55,4 +55,21 @@ export const planesService = {
     })
     return pago
   },
+
+  // Cobro manual en efectivo por recepción/administración (PG3):
+  //   1) POST /suscripciones -> crea la suscripción
+  //   2) POST /pagos         -> registra pago en EFECTIVO (queda APROBADO en el acto)
+  async cobrarEnEfectivo(plan, alumnoId) {
+    if (USE_MOCK) return mock.contratarPlan(plan, alumnoId)
+    const { data: suscripcion } = await api.post('/suscripciones', {
+      alumnoId,
+      planId: plan.id,
+    })
+    const { data: pago } = await api.post('/pagos', {
+      monto: plan.precio,
+      metodo: 'EFECTIVO',
+      suscripcionId: suscripcion.id,
+    })
+    return pago
+  },
 }

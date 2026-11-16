@@ -21,6 +21,7 @@ import GestionClases from './pages/admin/GestionClases'
 import Reportes from './pages/admin/Reportes'
 import Shop from './pages/alumno/Shop'
 import Productos from './pages/admin/Productos'
+import Usuarios from './pages/admin/Usuarios'
 import ClasesProfesor from './pages/profesor/ClasesProfesor'
 
 // La ruta "/" manda al login o al panel que corresponda según la sesión.
@@ -60,6 +61,7 @@ export default function App() {
       <Route element={<ProtectedRoute rol={ROLES.ADMIN} />}>
         <Route element={<DashboardLayout />}>
           <Route path="/admin" element={<InicioAdmin />} />
+          <Route path="/admin/usuarios" element={<Usuarios />} />
           <Route path="/admin/planes" element={<PlanesYTarifas />} />
           <Route path="/admin/clases" element={<GestionClases />} />
           <Route path="/admin/reportes" element={<Reportes />} />

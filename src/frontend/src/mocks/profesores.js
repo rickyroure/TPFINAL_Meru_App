@@ -1,8 +1,12 @@
-// Datos de prueba que imitan GET /profesores/{id}/alumnos (lista de AlumnoResponseDTO).
+// Datos de prueba que imitan GET /profesores, POST /profesores y GET /profesores/{id}/alumnos.
 
+const CLAVE_PROFESORES = 'meru_mock_profesores'
 const demora = (ms = 400) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const PROFESOR = { id: 1, nombre: 'Profesor', apellido: 'Demo', especialidad: 'Musculación' }
+const PROFESORES_INICIALES = [
+  { id: 1, nombre: 'Profesor', apellido: 'Demo', email: 'profesor@meru.com', especialidad: 'Musculación' },
+  { id: 2, nombre: 'Carolina', apellido: 'Paz', email: 'carolina@meru.com', especialidad: 'Funcional y Crossfit' },
+]
 
 const ALUMNOS = [
   {
@@ -12,7 +16,7 @@ const ALUMNOS = [
     email: 'alumno@meru.com',
     aptoFisico: true,
     fechaIngreso: '2026-09-01',
-    profesor: PROFESOR,
+    profesor: PROFESORES_INICIALES[0],
   },
   {
     id: 2,
@@ -21,7 +25,7 @@ const ALUMNOS = [
     email: 'lucia@meru.com',
     aptoFisico: false,
     fechaIngreso: '2026-10-12',
-    profesor: PROFESOR,
+    profesor: PROFESORES_INICIALES[0],
   },
   {
     id: 3,
@@ -30,9 +34,41 @@ const ALUMNOS = [
     email: 'mateo@meru.com',
     aptoFisico: true,
     fechaIngreso: '2026-10-19',
-    profesor: PROFESOR,
+    profesor: PROFESORES_INICIALES[0],
   },
 ]
+
+function leerProfesores() {
+  try {
+    const guardados = JSON.parse(localStorage.getItem(CLAVE_PROFESORES))
+    if (guardados) return guardados
+  } catch {
+    // Si está dañado se empieza de cero.
+  }
+  localStorage.setItem(CLAVE_PROFESORES, JSON.stringify(PROFESORES_INICIALES))
+  return PROFESORES_INICIALES
+}
+
+export async function listarProfesores() {
+  await demora()
+  return leerProfesores()
+}
+
+export async function registrarProfesor({ usuarioId, especialidad }) {
+  await demora(400)
+  if (!usuarioId) throw new Error('El ID del usuario es obligatorio')
+  if (!especialidad?.trim()) throw new Error('La especialidad es obligatoria')
+  const lista = leerProfesores()
+  const nuevo = {
+    id: Math.max(0, ...lista.map((p) => p.id)) + 1,
+    nombre: `Profesor #${usuarioId}`,
+    apellido: 'Meru',
+    email: `profesor.${usuarioId}@meru.app`,
+    especialidad: especialidad.trim(),
+  }
+  localStorage.setItem(CLAVE_PROFESORES, JSON.stringify([...lista, nuevo]))
+  return nuevo
+}
 
 export async function listarAlumnosAsignados(profesorId) {
   await demora()

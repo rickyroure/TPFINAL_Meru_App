@@ -20,7 +20,7 @@ export const MENU_POR_ROL = {
   ],
   [ROLES.ADMIN]: [
     { label: 'Inicio', to: '/admin', disponible: true },
-    { label: 'Usuarios', disponible: false },
+    { label: 'Usuarios', to: '/admin/usuarios', disponible: true },
     { label: 'Clases', to: '/admin/clases', disponible: true },
     { label: 'Planes y tarifas', to: '/admin/planes', disponible: true },
     { label: 'Productos', to: '/admin/productos', disponible: true },
