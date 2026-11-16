@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/alumnos")
 @Tag(name = "Alumnos", description = "Gestión de alumnos, perfil personal y apto físico")
@@ -22,6 +24,16 @@ public class AlumnoController {
 
     public AlumnoController(AlumnoService alumnoService) {
         this.alumnoService = alumnoService;
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar todos los alumnos registrados")
+    public ResponseEntity<List<AlumnoResponseDTO>> listarAlumnos() {
+        List<AlumnoResponseDTO> alumnos = alumnoService.listarAlumnos()
+                .stream()
+                .map(AlumnoResponseDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(alumnos);
     }
 
     @PostMapping
@@ -65,4 +77,3 @@ public class AlumnoController {
         return ResponseEntity.ok(AlumnoResponseDTO.fromEntity(alumno));
     }
 }
-

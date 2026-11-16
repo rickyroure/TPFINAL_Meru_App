@@ -28,6 +28,11 @@ public class ProfesorService {
         this.alumnoRepository = alumnoRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<Profesor> listarProfesores() {
+        return profesorRepository.findAll();
+    }
+
     @Transactional
     public Profesor registrarProfesor(ProfesorRequestDTO request) {
         Usuario usuario = usuarioRepository.findById(request.usuarioId())
@@ -56,4 +61,3 @@ public class ProfesorService {
         return alumnoRepository.findByProfesorId(profesorId);
     }
 }
-
