@@ -118,19 +118,19 @@ export default function MiPlan() {
           <>
             <div className="grid gap-4 sm:grid-cols-4">
               <div>
-                <p className="text-xs uppercase tracking-wide text-negro0">Plan</p>
+                <p className="text-xs uppercase tracking-wide text-negro/65">Plan</p>
                 <p className="mt-1 font-medium">{vigente.nombrePlan}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-negro0">Desde</p>
+                <p className="text-xs uppercase tracking-wide text-negro/65">Desde</p>
                 <p className="mt-1 font-medium">{formatearFecha(vigente.fechaInicio)}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-negro0">Vence</p>
+                <p className="text-xs uppercase tracking-wide text-negro/65">Vence</p>
                 <p className="mt-1 font-medium">{formatearFecha(vigente.fechaFin)}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-negro0">Días restantes</p>
+                <p className="text-xs uppercase tracking-wide text-negro/65">Días restantes</p>
                 <p className="mt-1 text-2xl font-bold text-azul">{vigente.diasRestantes}</p>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default function MiPlan() {
 
       <h3 className="mb-3 text-lg font-semibold text-azul">Mis suscripciones</h3>
       {historial.length === 0 ? (
-        <p className="text-sm text-negro0">Todavía no tenés suscripciones.</p>
+        <p className="text-sm text-negro/65">Todavía no tenés suscripciones.</p>
       ) : (
         <ul className="divide-y divide-negro/10 rounded-2xl border border-negro/10 bg-gris">
           {historial.map((s) => {

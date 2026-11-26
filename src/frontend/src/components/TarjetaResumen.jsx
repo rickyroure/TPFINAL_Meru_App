@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 export default function TarjetaResumen({ titulo, valor, detalle, aviso = false, to }) {
   const contenido = (
     <>
-      <p className="text-xs uppercase tracking-wide text-negro0">{titulo}</p>
+      <p className="text-xs uppercase tracking-wide text-negro/65">{titulo}</p>
       <p className="mt-2 text-2xl font-bold">{valor ?? '—'}</p>
       {detalle && (
         <p className={`mt-1 text-sm ${aviso ? 'text-amber-700' : 'text-negro/70'}`}>{detalle}</p>

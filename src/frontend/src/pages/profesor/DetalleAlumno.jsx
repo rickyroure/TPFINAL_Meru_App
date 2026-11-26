@@ -8,7 +8,7 @@ import Seccion1RM from '../../components/Seccion1RM'
 function Dato({ titulo, valor }) {
   return (
     <div className="rounded-lg bg-fondo px-3 py-2 text-center">
-      <p className="text-[10px] uppercase tracking-wide text-negro0">{titulo}</p>
+      <p className="text-[10px] uppercase tracking-wide text-negro/65">{titulo}</p>
       <p className="text-sm font-medium">{valor}</p>
     </div>
   )
@@ -49,13 +49,13 @@ function TarjetaEjercicio({ plan }) {
         <Dato titulo="RPE" valor={plan.rpe ?? '-'} />
       </div>
 
-      <h5 className="mb-2 text-xs uppercase tracking-wide text-negro0">Lo que hizo el alumno</h5>
+      <h5 className="mb-2 text-xs uppercase tracking-wide text-negro/65">Lo que hizo el alumno</h5>
       {cargando ? (
-        <p className="text-sm text-negro0">Cargando...</p>
+        <p className="text-sm text-negro/65">Cargando...</p>
       ) : error ? (
         <p className="text-sm text-red-700">{error}</p>
       ) : progreso.length === 0 ? (
-        <p className="text-sm text-negro0">Todavía no registró ninguna serie.</p>
+        <p className="text-sm text-negro/65">Todavía no registró ninguna serie.</p>
       ) : (
         <ul className="divide-y divide-negro/10 text-sm">
           {progreso.map((p) => (

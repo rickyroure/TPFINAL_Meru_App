@@ -5,7 +5,7 @@ export default function TablaDatos({ columnas, filas }) {
       <summary className="cursor-pointer text-sm text-azul">Ver como tabla</summary>
       <div className="mt-2 overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-negro0">
+          <thead className="text-xs uppercase tracking-wide text-negro/65">
             <tr>
               {columnas.map((c) => (
                 <th key={c} className="py-1.5 pr-4 font-medium">

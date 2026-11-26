@@ -74,7 +74,7 @@ function Inscriptos({ claseId }) {
       {error && <p className="mb-3 rounded-lg bg-red-500/15 px-3 py-2 text-sm text-red-700">{error}</p>}
 
       {reservas.length === 0 ? (
-        <p className="text-sm text-negro0">Todavía no hay alumnos inscriptos en esta clase.</p>
+        <p className="text-sm text-negro/65">Todavía no hay alumnos inscriptos en esta clase.</p>
       ) : (
         <>
           <p className="mb-3 text-sm text-negro/70">
@@ -89,7 +89,7 @@ function Inscriptos({ claseId }) {
               return (
                 <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5">
                   <div className="flex items-center gap-3">
-                    <p className={`text-sm font-medium ${cancelada ? 'text-negro0' : ''}`}>
+                    <p className={`text-sm font-medium ${cancelada ? 'text-negro/65' : ''}`}>
                       {r.nombreAlumno ?? `Alumno #${r.alumnoId}`}
                     </p>
                     <span className={`rounded-full px-2 py-0.5 text-xs ${estilo.clase}`}>{estilo.texto}</span>
@@ -190,7 +190,7 @@ export default function ClasesProfesor() {
       </div>
 
       {visibles.length === 0 ? (
-        <p className="text-sm text-negro0">
+        <p className="text-sm text-negro/65">
           {pestana === 'proximas' ? 'No tenés clases próximas.' : 'Todavía no hay clases pasadas.'}
         </p>
       ) : (

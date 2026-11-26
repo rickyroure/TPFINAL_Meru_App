@@ -73,7 +73,7 @@ export default function MisCompras({ alumnoId }) {
       </div>
 
       {ordenadas.length === 0 ? (
-        <p className="text-sm text-negro0">Todavía no hiciste ninguna compra.</p>
+        <p className="text-sm text-negro/65">Todavía no hiciste ninguna compra.</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {ordenadas.map((o) => {
@@ -83,7 +83,7 @@ export default function MisCompras({ alumnoId }) {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="font-semibold">Orden #{o.id}</p>
-                    <p className="text-xs text-negro0">{formatearFechaHora(o.fecha)}</p>
+                    <p className="text-xs text-negro/65">{formatearFechaHora(o.fecha)}</p>
                   </div>
                   <span className={`rounded-full px-2 py-0.5 text-xs ${estilo.clase}`}>{estilo.texto}</span>
                 </div>

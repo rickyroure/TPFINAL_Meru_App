@@ -176,11 +176,11 @@ export default function Shop() {
 
           <aside className="h-fit rounded-2xl border border-negro/10 bg-gris p-5">
             <h3 className="mb-4 font-semibold">
-              Carrito {cantidadTotal > 0 && <span className="text-negro0">({cantidadTotal})</span>}
+              Carrito {cantidadTotal > 0 && <span className="text-negro/65">({cantidadTotal})</span>}
             </h3>
 
             {lineas.length === 0 ? (
-              <p className="text-sm text-negro0">Todavía no agregaste productos.</p>
+              <p className="text-sm text-negro/65">Todavía no agregaste productos.</p>
             ) : (
               <>
                 <ul className="divide-y divide-negro/10">

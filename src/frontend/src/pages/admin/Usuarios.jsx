@@ -304,7 +304,7 @@ export default function Usuarios() {
           />
 
           {alumnosVisibles.length === 0 ? (
-            <p className="text-sm text-negro0">No se encontraron alumnos.</p>
+            <p className="text-sm text-negro/65">No se encontraron alumnos.</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {alumnosVisibles.map((a) => (
@@ -358,7 +358,7 @@ export default function Usuarios() {
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-negro/10 pt-3 text-sm">
-                    <span className="text-xs uppercase tracking-wide text-negro0">Profesor a cargo:</span>
+                    <span className="text-xs uppercase tracking-wide text-negro/65">Profesor a cargo:</span>
                     <select
                       value={a.profesor?.id ?? ''}
                       disabled={accionEnCurso === `prof-${a.id}`}
@@ -397,7 +397,7 @@ export default function Usuarios() {
           )}
 
           {profesores.length === 0 ? (
-            <p className="text-sm text-negro0">Todavía no hay profesores registrados.</p>
+            <p className="text-sm text-negro/65">Todavía no hay profesores registrados.</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {profesores.map((p) => (

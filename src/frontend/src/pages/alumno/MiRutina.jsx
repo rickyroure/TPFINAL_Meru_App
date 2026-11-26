@@ -10,7 +10,7 @@ const claseInput =
 function Dato({ titulo, valor }) {
   return (
     <div className="rounded-lg bg-fondo px-3 py-2 text-center">
-      <p className="text-[10px] uppercase tracking-wide text-negro0">{titulo}</p>
+      <p className="text-[10px] uppercase tracking-wide text-negro/65">{titulo}</p>
       <p className="text-sm font-medium">{valor}</p>
     </div>
   )
@@ -77,11 +77,11 @@ function TarjetaEjercicio({ plan }) {
         <Dato titulo="RPE" valor={plan.rpe ?? '-'} />
       </div>
 
-      <h5 className="mb-2 text-xs uppercase tracking-wide text-negro0">Lo que hice</h5>
+      <h5 className="mb-2 text-xs uppercase tracking-wide text-negro/65">Lo que hice</h5>
       {cargandoProgreso ? (
-        <p className="text-sm text-negro0">Cargando...</p>
+        <p className="text-sm text-negro/65">Cargando...</p>
       ) : progreso.length === 0 ? (
-        <p className="text-sm text-negro0">Todavía no registraste ninguna serie.</p>
+        <p className="text-sm text-negro/65">Todavía no registraste ninguna serie.</p>
       ) : (
         <ul className="mb-3 divide-y divide-negro/10 text-sm">
           {progreso.map((p) => (

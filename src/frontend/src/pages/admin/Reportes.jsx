@@ -178,7 +178,7 @@ export default function Reportes() {
             ))}
           </select>
         </label>
-        <span className="text-xs text-negro0">El filtro aplica a los ingresos.</span>
+        <span className="text-xs text-negro/65">El filtro aplica a los ingresos.</span>
       </div>
 
       {ingresos.error ? (

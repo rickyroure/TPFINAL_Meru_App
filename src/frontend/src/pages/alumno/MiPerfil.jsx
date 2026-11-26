@@ -10,7 +10,7 @@ const claseInput =
 function DatoFijo({ titulo, children }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-wide text-negro0">{titulo}</p>
+      <p className="text-xs uppercase tracking-wide text-negro/65">{titulo}</p>
       <p className="mt-1 text-sm">{children}</p>
     </div>
   )
@@ -141,7 +141,7 @@ export default function MiPerfil() {
 
       <section className="rounded-2xl border border-negro/10 bg-gris p-6">
         <h3 className="mb-1 font-semibold">Información del gimnasio</h3>
-        <p className="mb-4 text-xs text-negro0">
+        <p className="mb-4 text-xs text-negro/65">
           Estos datos los gestiona la administración y no se pueden editar.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">

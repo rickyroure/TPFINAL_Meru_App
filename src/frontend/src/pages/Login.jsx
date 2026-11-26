@@ -107,7 +107,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 rounded-lg bg-fondo p-3 text-xs text-negro0">
+          <div className="mt-6 rounded-lg bg-fondo p-3 text-xs text-negro/65">
             <p className="mb-2 font-medium text-negro/70">
               Cuentas de prueba ({USE_MOCK ? 'Modo Mock' : 'Keycloak Local'}) — tocá para completar:
             </p>

@@ -107,7 +107,7 @@ export default function Clases() {
 
       <h3 className="mb-3 text-lg font-semibold text-azul">Clases disponibles</h3>
       {clases.length === 0 ? (
-        <p className="mb-8 text-sm text-negro0">No hay clases próximas.</p>
+        <p className="mb-8 text-sm text-negro/65">No hay clases próximas.</p>
       ) : (
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           {clases.map((clase) => {
@@ -123,7 +123,7 @@ export default function Clases() {
                   <p className="mt-1 text-sm capitalize text-negro/70">
                     {formatearHorario(clase.horario)}
                   </p>
-                  <p className="text-sm text-negro0">Profesor: {clase.nombreProfesor}</p>
+                  <p className="text-sm text-negro/65">Profesor: {clase.nombreProfesor}</p>
                   <p className={`mt-2 text-sm ${sinCupo ? 'text-red-700' : 'text-negro'}`}>
                     {sinCupo
                       ? 'Sin cupo'
@@ -133,7 +133,7 @@ export default function Clases() {
                 <button
                   onClick={() => reservar(clase)}
                   disabled={reservada || sinCupo || accionEnCurso !== null}
-                  className="mt-4 rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:cursor-not-allowed disabled:bg-negro/10 disabled:text-negro0"
+                  className="mt-4 rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:cursor-not-allowed disabled:bg-negro/10 disabled:text-negro/65"
                 >
                   {accionEnCurso === `reservar-${clase.id}`
                     ? 'Reservando...'
@@ -151,7 +151,7 @@ export default function Clases() {
 
       <h3 className="mb-3 text-lg font-semibold text-azul">Mis reservas</h3>
       {misReservas.length === 0 ? (
-        <p className="text-sm text-negro0">Todavía no tenés reservas.</p>
+        <p className="text-sm text-negro/65">Todavía no tenés reservas.</p>
       ) : (
         <ul className="divide-y divide-negro/10 rounded-2xl border border-negro/10 bg-gris">
           {misReservas.map((reserva) => {

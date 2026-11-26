@@ -62,7 +62,7 @@ export default function Seccion1RM({ alumnoId }) {
     }
   }
 
-  if (cargando) return <p className="mb-8 text-sm text-negro0">Cargando máximos...</p>
+  if (cargando) return <p className="mb-8 text-sm text-negro/65">Cargando máximos...</p>
   if (error) return <p className="mb-8 text-sm text-red-700">{error}</p>
 
   // La lista viene ordenada de la medición más nueva a la más vieja: la primera de cada ejercicio es la actual.
@@ -79,12 +79,12 @@ export default function Seccion1RM({ alumnoId }) {
       </p>
 
       {actuales.length === 0 ? (
-        <p className="mb-4 text-sm text-negro0">Todavía no hay máximos registrados.</p>
+        <p className="mb-4 text-sm text-negro/65">Todavía no hay máximos registrados.</p>
       ) : (
         <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {actuales.map((r) => (
             <div key={r.ejercicioId} className="rounded-lg bg-fondo px-3 py-2 text-center">
-              <p className="text-[10px] uppercase tracking-wide text-negro0">{r.nombreEjercicio}</p>
+              <p className="text-[10px] uppercase tracking-wide text-negro/65">{r.nombreEjercicio}</p>
               <p className="text-sm font-medium">{r.valor1rm} kg</p>
             </div>
           ))}

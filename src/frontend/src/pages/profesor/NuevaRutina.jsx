@@ -223,7 +223,7 @@ export default function NuevaRutina() {
       </div>
 
       {items.length === 0 ? (
-        <p className="mb-6 text-sm text-negro0">Todavía no agregaste ejercicios.</p>
+        <p className="mb-6 text-sm text-negro/65">Todavía no agregaste ejercicios.</p>
       ) : (
         <div className="mb-6 flex flex-col gap-4">
           {semanasConItems.map((n) => (
