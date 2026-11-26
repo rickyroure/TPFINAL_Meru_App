@@ -37,6 +37,21 @@ class ProfesorServiceTest {
     private ProfesorService profesorService;
 
     @Test
+    void listarProfesores_debeRetornarTodosLosProfesores() {
+        Profesor p1 = new Profesor();
+        p1.setId(1L);
+        Profesor p2 = new Profesor();
+        p2.setId(2L);
+
+        when(profesorRepository.findAll()).thenReturn(List.of(p1, p2));
+
+        List<Profesor> resultado = profesorService.listarProfesores();
+
+        assertEquals(2, resultado.size());
+        verify(profesorRepository).findAll();
+    }
+
+    @Test
     void registrarProfesor_debeCrearYRetornarProfesor_cuandoUsuarioExisteYNoTieneProfesor() {
         Long usuarioId = 1L;
         Usuario usuario = new Usuario();
@@ -137,4 +152,3 @@ class ProfesorServiceTest {
         verify(alumnoRepository).findByProfesorId(10L);
     }
 }
-

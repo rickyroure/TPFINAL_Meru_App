@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,8 +40,22 @@ class AlumnoServiceTest {
     private AlumnoService alumnoService;
 
     @Test
+    void listarAlumnos_debeRetornarTodosLosAlumnos() {
+        Alumno a1 = new Alumno();
+        a1.setId(1L);
+        Alumno a2 = new Alumno();
+        a2.setId(2L);
+
+        when(alumnoRepository.findAll()).thenReturn(List.of(a1, a2));
+
+        List<Alumno> resultado = alumnoService.listarAlumnos();
+
+        assertEquals(2, resultado.size());
+        verify(alumnoRepository).findAll();
+    }
+
+    @Test
     void registrarAlumno_debeCrearYRetornarAlumno_cuandoUsuarioExisteYNoTieneAlumno() {
-        // Arrange
         Long usuarioId = 1L;
         Usuario usuario = new Usuario();
         usuario.setId(usuarioId);
@@ -61,10 +76,8 @@ class AlumnoServiceTest {
 
         when(alumnoRepository.save(any(Alumno.class))).thenReturn(savedAlumno);
 
-        // Act
         Alumno result = alumnoService.registrarAlumno(request);
 
-        // Assert
         assertNotNull(result);
         assertEquals(100L, result.getId());
         assertEquals(usuarioId, result.getUsuario().getId());
@@ -217,4 +230,3 @@ class AlumnoServiceTest {
         verify(alumnoRepository).save(alumno);
     }
 }
-

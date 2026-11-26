@@ -10,9 +10,12 @@ import java.util.Optional;
 
 @Repository
 public interface AlumnoRepository extends JpaRepository<Alumno, Long> {
+    @Override
+    @EntityGraph(attributePaths = {"usuario", "profesor", "profesor.usuario"})
+    List<Alumno> findAll();
+
     Optional<Alumno> findByUsuarioId(Long usuarioId);
 
     @EntityGraph(attributePaths = {"usuario", "profesor", "profesor.usuario"})
     List<Alumno> findByProfesorId(Long profesorId);
 }
-

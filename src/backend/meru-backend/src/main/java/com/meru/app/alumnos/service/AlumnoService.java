@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class AlumnoService {
@@ -28,6 +29,11 @@ public class AlumnoService {
         this.alumnoRepository = alumnoRepository;
         this.usuarioRepository = usuarioRepository;
         this.profesorRepository = profesorRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Alumno> listarAlumnos() {
+        return alumnoRepository.findAll();
     }
 
     @Transactional
@@ -84,4 +90,3 @@ public class AlumnoService {
         return alumnoRepository.save(alumno);
     }
 }
-

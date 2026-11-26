@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* Paleta oficial de Meru App. Usar siempre estos nombres (bg-azul, text-negro, etc.)
+   y no colores sueltos, para que el diseño se mantenga consistente. */
+@theme {
+  --color-azul: #0056b3;    /* Azul Principal: encabezados, barra de navegación, marca */
+  --color-celeste: #00bfff; /* Celeste Activo: botones de acción, enlaces, estados activos */
+  --color-negro: #1e1e24;   /* Negro Deportivo: texto principal y contraste fuerte */
+  --color-fondo: #f8f9fa;   /* Fondo Claro: fondo general de la app */
+  --color-gris: #e9ecef;    /* Gris de Contraste: tarjetas, bordes de inputs, separadores */
+}
+
+@layer base {
+  body {
+    @apply bg-fondo text-negro antialiased;
+  }
+}

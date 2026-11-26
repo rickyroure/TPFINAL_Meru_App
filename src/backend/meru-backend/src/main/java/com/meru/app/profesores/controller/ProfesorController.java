@@ -25,6 +25,16 @@ public class ProfesorController {
         this.profesorService = profesorService;
     }
 
+    @GetMapping
+    @Operation(summary = "Listar todos los profesores registrados")
+    public ResponseEntity<List<ProfesorResponseDTO>> listarProfesores() {
+        List<ProfesorResponseDTO> profesores = profesorService.listarProfesores()
+                .stream()
+                .map(ProfesorResponseDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(profesores);
+    }
+
     @PostMapping
     @Operation(summary = "Registrar perfil de profesor vinculado a un usuario")
     public ResponseEntity<ProfesorResponseDTO> registrarProfesor(@Valid @RequestBody ProfesorRequestDTO request) {
@@ -49,4 +59,3 @@ public class ProfesorController {
         return ResponseEntity.ok(alumnos);
     }
 }
-

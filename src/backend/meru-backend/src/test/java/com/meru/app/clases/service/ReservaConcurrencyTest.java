@@ -96,8 +96,8 @@ public class ReservaConcurrencyTest {
 
     @AfterEach
     void tearDown() {
-        // Cleaning up created entities
-        reservaRepository.deleteAll();
+        // Cleaning up only entities created by this test
+        reservaRepository.deleteAll(reservaRepository.findByClaseId(clase.getId()));
         claseRepository.delete(clase);
         profesorRepository.delete(profesor);
         usuarioRepository.delete(profesor.getUsuario());
@@ -143,6 +143,6 @@ public class ReservaConcurrencyTest {
 
         Clase claseActualizada = claseRepository.findById(clase.getId()).get();
         assertEquals(0, claseActualizada.getCupoDisponible(), "El cupo disponible no debe ser negativo");
-        assertEquals(1, reservaRepository.count(), "Solo debe haber 1 reserva en BD");
+        assertEquals(1, reservaRepository.findByClaseId(clase.getId()).size(), "Solo debe haber 1 reserva en BD para esta clase");
     }
 }
