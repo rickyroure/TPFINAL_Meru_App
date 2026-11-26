@@ -4,6 +4,8 @@ import { productosService } from '../../services/productos'
 import { ordenesService } from '../../services/ordenes'
 import { mensajeDeError } from '../../utils/errores'
 import MisCompras from './MisCompras'
+import Ilustracion from '../../components/Ilustracion'
+import { claveProducto } from '../../utils/imagenes'
 
 const STOCK_BAJO = 5
 
@@ -148,6 +150,7 @@ export default function Shop() {
                       className="flex flex-col justify-between rounded-2xl border border-negro/10 bg-gris p-5"
                     >
                       <div>
+                        <Ilustracion clave={claveProducto(p.nombre)} />
                         <h3 className="font-semibold">{p.nombre}</h3>
                         <p className="mt-2 text-2xl font-bold">{formatearPrecio(p.precio)}</p>
                         {sinStock ? (

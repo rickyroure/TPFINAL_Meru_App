@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { clasesService } from '../../services/clases'
 import { mensajeDeError } from '../../utils/errores'
+import Ilustracion from '../../components/Ilustracion'
+import { claveActividad } from '../../utils/imagenes'
 
 const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb']
 
@@ -201,9 +203,12 @@ export default function ClasesProfesor() {
             return (
               <li key={c.id} className="rounded-2xl border border-negro/10 bg-gris p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="font-semibold">{c.tipoActividad}</p>
-                    <p className="text-sm text-negro/70">{formatearHorario(c.horario)}</p>
+                  <div className="flex items-center gap-3">
+                    <Ilustracion clave={claveActividad(c.tipoActividad)} variante="miniatura" />
+                    <div>
+                      <p className="font-semibold">{c.tipoActividad}</p>
+                      <p className="text-sm text-negro/70">{formatearHorario(c.horario)}</p>
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-negro/70">

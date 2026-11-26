@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { clasesService } from '../../services/clases'
 import { mensajeDeError } from '../../utils/errores'
+import Ilustracion from '../../components/Ilustracion'
+import { claveActividad } from '../../utils/imagenes'
 
 const claseInput =
   'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
@@ -123,11 +125,14 @@ export default function GestionClases() {
                   pasada ? 'opacity-60' : ''
                 }`}
               >
-                <div>
-                  <p className="font-semibold">{c.tipoActividad}</p>
-                  <p className="text-sm text-negro/70">
-                    {formatoHorario(c.horario)} · {c.nombreProfesor}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <Ilustracion clave={claveActividad(c.tipoActividad)} variante="miniatura" />
+                  <div>
+                    <p className="font-semibold">{c.tipoActividad}</p>
+                    <p className="text-sm text-negro/70">
+                      {formatoHorario(c.horario)} · {c.nombreProfesor}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <span className="text-negro">

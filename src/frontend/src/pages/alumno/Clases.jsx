@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { clasesService } from '../../services/clases'
 import { mensajeDeError } from '../../utils/errores'
+import Ilustracion from '../../components/Ilustracion'
+import { claveActividad } from '../../utils/imagenes'
 
 // "2026-10-29T18:00:00" -> "jue 29 oct, 18:00"
 function formatearHorario(iso) {
@@ -119,6 +121,7 @@ export default function Clases() {
                 className="flex flex-col justify-between rounded-2xl border border-negro/10 bg-gris p-5"
               >
                 <div>
+                  <Ilustracion clave={claveActividad(clase.tipoActividad)} />
                   <h4 className="font-semibold">{clase.tipoActividad}</h4>
                   <p className="mt-1 text-sm capitalize text-negro/70">
                     {formatearHorario(clase.horario)}
@@ -158,11 +161,14 @@ export default function Clases() {
             const estilo = ESTILO_ESTADO[reserva.estado]
             return (
               <li key={reserva.id} className="flex items-center justify-between gap-4 p-4">
-                <div>
-                  <p className="font-medium">{reserva.tipoActividadClase}</p>
-                  <p className="text-sm capitalize text-negro/70">
-                    {formatearHorario(reserva.horarioClase)}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <Ilustracion clave={claveActividad(reserva.tipoActividadClase)} variante="miniatura" />
+                  <div>
+                    <p className="font-medium">{reserva.tipoActividadClase}</p>
+                    <p className="text-sm capitalize text-negro/70">
+                      {formatearHorario(reserva.horarioClase)}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs ${estilo.clase}`}>

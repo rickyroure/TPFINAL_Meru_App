@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { productosService } from '../../services/productos'
 import { mensajeDeError } from '../../utils/errores'
+import Ilustracion from '../../components/Ilustracion'
+import { claveProducto } from '../../utils/imagenes'
 
 const STOCK_BAJO = 5
 
@@ -157,7 +159,9 @@ export default function Productos() {
               key={p.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-negro/10 bg-gris p-4"
             >
-              <div>
+              <div className="flex items-center gap-3">
+                <Ilustracion clave={claveProducto(p.nombre)} variante="miniatura" />
+                <div>
                 <p className="font-semibold">{p.nombre}</p>
                 {p.stock <= 0 ? (
                   <p className="text-sm text-red-700">Sin stock</p>
@@ -166,6 +170,7 @@ export default function Productos() {
                 ) : (
                   <p className="text-sm text-negro/70">Stock: {p.stock}</p>
                 )}
+                </div>
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-lg font-semibold text-azul">{formatoPrecio(p.precio)}</span>
