@@ -6,11 +6,11 @@ import { mensajeDeError } from '../../utils/errores'
 import { formatearPrecio } from '../../utils/formato'
 
 const claseInput =
-  'w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 
 const claseBotonPestana = (activa) =>
   `rounded-lg px-4 py-2 text-sm font-medium transition ${
-    activa ? 'bg-emerald-500 text-neutral-950' : 'border border-neutral-700 text-neutral-300 hover:bg-neutral-800'
+    activa ? 'bg-celeste text-negro' : 'border border-negro/20 text-negro hover:bg-negro/10'
   }`
 
 // Panel desplegable para cobrarle un plan en efectivo a un alumno (PG3).
@@ -38,8 +38,8 @@ function FormularioPagoEfectivo({ alumno, planes, onPagado, onCancelar }) {
   }
 
   return (
-    <form onSubmit={confirmar} className="mt-4 grid gap-3 border-t border-neutral-800 pt-4 sm:grid-cols-3">
-      <label className="flex flex-col gap-1 text-xs text-neutral-400 sm:col-span-2">
+    <form onSubmit={confirmar} className="mt-4 grid gap-3 border-t border-negro/10 pt-4 sm:grid-cols-3">
+      <label className="flex flex-col gap-1 text-xs text-negro/70 sm:col-span-2">
         Plan a cobrar en efectivo
         <select className={claseInput} value={planId} onChange={(e) => setPlanId(e.target.value)}>
           {planes.map((p) => (
@@ -53,19 +53,19 @@ function FormularioPagoEfectivo({ alumno, planes, onPagado, onCancelar }) {
         <button
           type="submit"
           disabled={guardando || planes.length === 0}
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Registrando...' : 'Confirmar cobro'}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-lg border border-neutral-700 px-3 py-2 text-sm text-neutral-300 hover:bg-neutral-800"
+          className="rounded-lg border border-negro/20 px-3 py-2 text-sm text-negro hover:bg-negro/10"
         >
           Cancelar
         </button>
       </div>
-      {error && <p className="text-sm text-red-400 sm:col-span-3">{error}</p>}
+      {error && <p className="text-sm text-red-700 sm:col-span-3">{error}</p>}
     </form>
   )
 }
@@ -104,10 +104,10 @@ function FormularioNuevoProfesor({ onCreado, onCancelar }) {
   return (
     <form
       onSubmit={guardar}
-      className="mb-6 grid gap-3 rounded-2xl border border-emerald-500/40 bg-neutral-900 p-5 sm:grid-cols-3"
+      className="mb-6 grid gap-3 rounded-2xl border border-celeste/40 bg-gris p-5 sm:grid-cols-3"
     >
       <h3 className="font-semibold sm:col-span-3">Dar de alta nuevo profesor</h3>
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         ID del usuario sincronizado
         <input
           type="number"
@@ -118,7 +118,7 @@ function FormularioNuevoProfesor({ onCreado, onCancelar }) {
           onChange={(e) => setUsuarioId(e.target.value)}
         />
       </label>
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         Especialidad
         <input
           placeholder="Musculación, CrossFit, Yoga..."
@@ -131,19 +131,19 @@ function FormularioNuevoProfesor({ onCreado, onCancelar }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Guardando...' : 'Registrar'}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800"
+          className="rounded-lg border border-negro/20 px-4 py-2 text-sm text-negro hover:bg-negro/10"
         >
           Cancelar
         </button>
       </div>
-      {error && <p className="text-sm text-red-400 sm:col-span-3">{error}</p>}
+      {error && <p className="text-sm text-red-700 sm:col-span-3">{error}</p>}
     </form>
   )
 }
@@ -244,8 +244,8 @@ export default function Usuarios() {
     })
   }
 
-  if (cargando) return <p className="text-neutral-400">Cargando usuarios...</p>
-  if (errorCarga) return <p className="text-red-400">{errorCarga}</p>
+  if (cargando) return <p className="text-negro/70">Cargando usuarios...</p>
+  if (errorCarga) return <p className="text-red-700">{errorCarga}</p>
 
   const texto = busqueda.trim().toLowerCase()
   const alumnosVisibles = alumnos.filter((a) =>
@@ -257,7 +257,7 @@ export default function Usuarios() {
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold">Usuarios</h2>
-          <p className="mt-1 text-sm text-neutral-400">
+          <p className="mt-1 text-sm text-negro/70">
             Gestioná el apto físico, profesor asignado y cobros en efectivo de los alumnos, o da de alta profesores.
           </p>
         </div>
@@ -267,7 +267,7 @@ export default function Usuarios() {
               setMensaje(null)
               setCreandoProfesor(true)
             }}
-            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400"
+            className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80"
           >
             + Nuevo profesor
           </button>
@@ -286,7 +286,7 @@ export default function Usuarios() {
       {mensaje && (
         <p
           className={`mb-4 rounded-lg px-4 py-2.5 text-sm ${
-            mensaje.tipo === 'exito' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
+            mensaje.tipo === 'exito' ? 'bg-celeste/15 text-azul' : 'bg-red-500/15 text-red-700'
           }`}
         >
           {mensaje.texto}
@@ -300,35 +300,35 @@ export default function Usuarios() {
             placeholder="Buscar alumno por nombre o email..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="mb-4 w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+            className="mb-4 w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste"
           />
 
           {alumnosVisibles.length === 0 ? (
-            <p className="text-sm text-neutral-500">No se encontraron alumnos.</p>
+            <p className="text-sm text-negro0">No se encontraron alumnos.</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {alumnosVisibles.map((a) => (
-                <li key={a.id} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+                <li key={a.id} className="rounded-2xl border border-negro/10 bg-gris p-5">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2.5">
                         <p className="font-semibold">
                           {a.nombre} {a.apellido}
                         </p>
-                        <span className="rounded bg-neutral-800 px-2 py-0.5 text-xs text-neutral-400">
+                        <span className="rounded bg-negro/10 px-2 py-0.5 text-xs text-negro/70">
                           ID #{a.id}
                         </span>
                         <span
                           className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
                             a.aptoFisico
-                              ? 'bg-emerald-500/15 text-emerald-400'
-                              : 'bg-amber-500/15 text-amber-400'
+                              ? 'bg-celeste/15 text-azul'
+                              : 'bg-amber-500/15 text-amber-700'
                           }`}
                         >
                           {a.aptoFisico ? 'Apto físico vigente' : 'Sin apto físico'}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm text-neutral-400">
+                      <p className="mt-1 text-sm text-negro/70">
                         {a.email} · Ingreso: {a.fechaIngreso}
                       </p>
                     </div>
@@ -338,7 +338,7 @@ export default function Usuarios() {
                         type="button"
                         onClick={() => cambiarAptoFisico(a)}
                         disabled={accionEnCurso !== null}
-                        className="rounded-lg border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-300 transition hover:bg-neutral-800 disabled:opacity-50"
+                        className="rounded-lg border border-negro/20 px-3 py-1.5 text-xs font-medium text-negro transition hover:bg-negro/10 disabled:opacity-50"
                       >
                         {accionEnCurso === `apto-${a.id}`
                           ? 'Guardando...'
@@ -350,20 +350,20 @@ export default function Usuarios() {
                       <button
                         type="button"
                         onClick={() => setAlumnoCobrando(alumnoCobrando === a.id ? null : a.id)}
-                        className="rounded-lg border border-emerald-500/60 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10"
+                        className="rounded-lg border border-celeste/60 px-3 py-1.5 text-xs font-medium text-azul transition hover:bg-celeste/10"
                       >
                         Cobrar plan (Efectivo)
                       </button>
                     </div>
                   </div>
 
-                  <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-neutral-800/80 pt-3 text-sm">
-                    <span className="text-xs uppercase tracking-wide text-neutral-500">Profesor a cargo:</span>
+                  <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-negro/10 pt-3 text-sm">
+                    <span className="text-xs uppercase tracking-wide text-negro0">Profesor a cargo:</span>
                     <select
                       value={a.profesor?.id ?? ''}
                       disabled={accionEnCurso === `prof-${a.id}`}
                       onChange={(e) => cambiarProfesor(a, e.target.value)}
-                      className="rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-1.5 text-sm outline-none focus:border-emerald-500"
+                      className="rounded-lg border border-negro/20 bg-fondo px-3 py-1.5 text-sm outline-none focus:border-celeste"
                     >
                       <option value="">Sin profesor asignado</option>
                       {profesores.map((p) => (
@@ -397,26 +397,26 @@ export default function Usuarios() {
           )}
 
           {profesores.length === 0 ? (
-            <p className="text-sm text-neutral-500">Todavía no hay profesores registrados.</p>
+            <p className="text-sm text-negro0">Todavía no hay profesores registrados.</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {profesores.map((p) => (
                 <li
                   key={p.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-neutral-800 bg-neutral-900 p-4"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-negro/10 bg-gris p-4"
                 >
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-semibold">
                         {p.nombre} {p.apellido}
                       </p>
-                      <span className="rounded bg-neutral-800 px-2 py-0.5 text-xs text-neutral-400">
+                      <span className="rounded bg-negro/10 px-2 py-0.5 text-xs text-negro/70">
                         ID #{p.id}
                       </span>
                     </div>
-                    <p className="mt-0.5 text-sm text-neutral-400">{p.email}</p>
+                    <p className="mt-0.5 text-sm text-negro/70">{p.email}</p>
                   </div>
-                  <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-400">
+                  <span className="rounded-full bg-celeste/15 px-3 py-1 text-xs font-medium text-azul">
                     {p.especialidad}
                   </span>
                 </li>

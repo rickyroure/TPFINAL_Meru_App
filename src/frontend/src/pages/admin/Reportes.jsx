@@ -5,13 +5,12 @@ import TablaDatos from '../../components/TablaDatos'
 import { reportesService } from '../../services/reportes'
 import { mensajeDeError } from '../../utils/errores'
 
-// Colores de los gráficos (validados para daltonismo sobre fondo oscuro).
-// Cuando el grupo defina la paleta, se cambian solo estas dos líneas.
-const COLOR_1 = '#3987e5' // azul
-const COLOR_2 = '#d95926' // naranja
+// Colores de los gráficos, tomados de la paleta de Meru App (Azul Principal y Negro Deportivo).
+const COLOR_1 = '#0056b3' // azul principal
+const COLOR_2 = '#1e1e24' // negro deportivo
 
 const claseSelect =
-  'rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 const MESES_LARGOS = [
@@ -28,9 +27,9 @@ const formatoVisitas = (valor, corto) => (corto ? String(valor) : `${valor} ${va
 
 function Tarjeta({ titulo, subtitulo, children }) {
   return (
-    <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+    <section className="rounded-2xl border border-negro/10 bg-gris p-5">
       <h3 className="text-lg font-semibold">{titulo}</h3>
-      {subtitulo && <p className="mb-4 mt-1 text-sm text-neutral-400">{subtitulo}</p>}
+      {subtitulo && <p className="mb-4 mt-1 text-sm text-negro/70">{subtitulo}</p>}
       {children}
     </section>
   )
@@ -38,16 +37,16 @@ function Tarjeta({ titulo, subtitulo, children }) {
 
 function Indicador({ titulo, valor, grande = false }) {
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
-      <p className="text-xs text-neutral-400">{titulo}</p>
-      <p className={`mt-1 font-semibold ${grande ? 'text-4xl text-emerald-400' : 'text-xl'}`}>{valor}</p>
+    <div className="rounded-2xl border border-negro/10 bg-gris p-4">
+      <p className="text-xs text-negro/70">{titulo}</p>
+      <p className={`mt-1 font-semibold ${grande ? 'text-4xl text-azul' : 'text-xl'}`}>{valor}</p>
     </div>
   )
 }
 
 function Leyenda({ items }) {
   return (
-    <ul className="mb-3 flex flex-wrap gap-4 text-sm text-neutral-300">
+    <ul className="mb-3 flex flex-wrap gap-4 text-sm text-negro">
       {items.map((item) => (
         <li key={item.nombre} className="flex items-center gap-2">
           <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: item.color }} />
@@ -153,12 +152,12 @@ export default function Reportes() {
   return (
     <div className="max-w-5xl">
       <h2 className="text-2xl font-bold">Reportes</h2>
-      <p className="mb-6 mt-1 text-sm text-neutral-400">
+      <p className="mb-6 mt-1 text-sm text-negro/70">
         Datos de ejemplo del prototipo. Con el backend conectado se calculan con los pagos, reservas y check-ins reales.
       </p>
 
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <label className="flex items-center gap-2 text-sm text-neutral-400">
+        <label className="flex items-center gap-2 text-sm text-negro/70">
           Año
           <select className={claseSelect} value={anio} onChange={(e) => setAnio(Number(e.target.value))}>
             {[anioActual, anioActual - 1, anioActual - 2].map((a) => (
@@ -168,7 +167,7 @@ export default function Reportes() {
             ))}
           </select>
         </label>
-        <label className="flex items-center gap-2 text-sm text-neutral-400">
+        <label className="flex items-center gap-2 text-sm text-negro/70">
           Mes
           <select className={claseSelect} value={mes} onChange={(e) => setMes(e.target.value)}>
             <option value="">Todo el año</option>
@@ -179,13 +178,13 @@ export default function Reportes() {
             ))}
           </select>
         </label>
-        <span className="text-xs text-neutral-500">El filtro aplica a los ingresos.</span>
+        <span className="text-xs text-negro0">El filtro aplica a los ingresos.</span>
       </div>
 
       {ingresos.error ? (
-        <p className="mb-6 text-red-400">{ingresos.error}</p>
+        <p className="mb-6 text-red-700">{ingresos.error}</p>
       ) : !reporte ? (
-        <p className="mb-6 text-neutral-400">Cargando ingresos...</p>
+        <p className="mb-6 text-negro/70">Cargando ingresos...</p>
       ) : (
         <div className={`mb-6 transition-opacity ${recargando ? 'opacity-50' : ''}`}>
           <div className="mb-4 grid gap-3 sm:grid-cols-4">
@@ -201,9 +200,9 @@ export default function Reportes() {
             subtitulo={`Pagos aprobados en ${reporte.mes !== null ? `${MESES_LARGOS[reporte.mes - 1]} de ` : ''}${reporte.anio}: ${reporte.cantidadPagos} en total.`}
           >
             {reporte.cantidadPagos === 0 ? (
-              <p className="text-sm text-neutral-400">No hay pagos aprobados en este período.</p>
+              <p className="text-sm text-negro/70">No hay pagos aprobados en este período.</p>
             ) : reporte.mes !== null ? (
-              <p className="text-sm text-neutral-400">
+              <p className="text-sm text-negro/70">
                 Elegí "Todo el año" para ver la evolución mes a mes. En {MESES_LARGOS[reporte.mes - 1]} hubo{' '}
                 {reporte.cantidadPagos} pagos.
               </p>
@@ -235,11 +234,11 @@ export default function Reportes() {
       <div className="mb-6 grid gap-6 lg:grid-cols-2">
         <Tarjeta titulo="Afluencia por día" subtitulo="Reservas confirmadas y check-ins, según el día de la semana.">
           {afluencia.error ? (
-            <p className="text-red-400">{afluencia.error}</p>
+            <p className="text-red-700">{afluencia.error}</p>
           ) : !afluencia.datos ? (
-            <p className="text-neutral-400">Cargando...</p>
+            <p className="text-negro/70">Cargando...</p>
           ) : afluencia.datos.totalConcurrencias === 0 ? (
-            <p className="text-sm text-neutral-400">Todavía no hay movimientos registrados.</p>
+            <p className="text-sm text-negro/70">Todavía no hay movimientos registrados.</p>
           ) : (
             <>
               <GraficoColumnas
@@ -257,11 +256,11 @@ export default function Reportes() {
 
         <Tarjeta titulo="Afluencia por horario" subtitulo="Cantidad de ingresos en cada franja de una hora.">
           {afluencia.error ? (
-            <p className="text-red-400">{afluencia.error}</p>
+            <p className="text-red-700">{afluencia.error}</p>
           ) : !afluencia.datos ? (
-            <p className="text-neutral-400">Cargando...</p>
+            <p className="text-negro/70">Cargando...</p>
           ) : horas.length === 0 ? (
-            <p className="text-sm text-neutral-400">Todavía no hay movimientos registrados.</p>
+            <p className="text-sm text-negro/70">Todavía no hay movimientos registrados.</p>
           ) : (
             <>
               <GraficoColumnas
@@ -280,11 +279,11 @@ export default function Reportes() {
 
       <Tarjeta titulo="Alumnos por actividad" subtitulo="Cuántos alumnos distintos participan en cada actividad (clases y check-ins libres).">
         {actividades.error ? (
-          <p className="text-red-400">{actividades.error}</p>
+          <p className="text-red-700">{actividades.error}</p>
         ) : !actividades.datos ? (
-          <p className="text-neutral-400">Cargando...</p>
+          <p className="text-negro/70">Cargando...</p>
         ) : actividades.datos.length === 0 ? (
-          <p className="text-sm text-neutral-400">Todavía no hay actividad registrada.</p>
+          <p className="text-sm text-negro/70">Todavía no hay actividad registrada.</p>
         ) : (
           <>
             <ListaBarras

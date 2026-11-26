@@ -33,7 +33,7 @@ export default function InicioAlumno() {
     }
   }, [usuario.alumnoId])
 
-  if (datos === null) return <p className="text-neutral-400">Cargando tu resumen...</p>
+  if (datos === null) return <p className="text-negro/70">Cargando tu resumen...</p>
   const [perfil, suscripciones, reservas, rutinas] = datos
 
   // Plan vigente: la suscripción activa que vence más tarde.
@@ -52,7 +52,7 @@ export default function InicioAlumno() {
   return (
     <Bienvenida descripcion="Este es el resumen de tu actividad en el gimnasio.">
       {perfil && !perfil.aptoFisico && (
-        <p className="mb-4 rounded-lg bg-amber-500/15 px-4 py-3 text-sm text-amber-400">
+        <p className="mb-4 rounded-lg bg-amber-500/15 px-4 py-3 text-sm text-amber-700">
           Todavía no tenés el apto físico registrado. Acercalo al gimnasio para que lo carguen.
         </p>
       )}

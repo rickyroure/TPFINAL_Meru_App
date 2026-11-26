@@ -6,7 +6,7 @@ import { rutinasService } from '../../services/rutinas'
 import { mensajeDeError } from '../../utils/errores'
 
 const claseInput =
-  'w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 
 // Panel que aparece al tocar "Asignar" en una plantilla.
 function FormularioAsignar({ plantilla, alumnos, onAsignada, onCancelar }) {
@@ -36,8 +36,8 @@ function FormularioAsignar({ plantilla, alumnos, onAsignada, onCancelar }) {
   }
 
   return (
-    <form onSubmit={asignar} className="mt-4 grid gap-3 border-t border-neutral-800 pt-4 sm:grid-cols-3">
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+    <form onSubmit={asignar} className="mt-4 grid gap-3 border-t border-negro/10 pt-4 sm:grid-cols-3">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         Alumno
         <select className={claseInput} value={alumnoId} onChange={(e) => setAlumnoId(e.target.value)}>
           <option value="">Elegir...</option>
@@ -48,7 +48,7 @@ function FormularioAsignar({ plantilla, alumnos, onAsignada, onCancelar }) {
           ))}
         </select>
       </label>
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         Fecha de inicio
         <input type="date" className={claseInput} value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
       </label>
@@ -56,19 +56,19 @@ function FormularioAsignar({ plantilla, alumnos, onAsignada, onCancelar }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Asignando...' : 'Confirmar'}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800"
+          className="rounded-lg border border-negro/20 px-4 py-2 text-sm text-negro hover:bg-negro/10"
         >
           Cancelar
         </button>
       </div>
-      {error && <p className="text-sm text-red-400 sm:col-span-3">{error}</p>}
+      {error && <p className="text-sm text-red-700 sm:col-span-3">{error}</p>}
     </form>
   )
 }
@@ -102,8 +102,8 @@ export default function Rutinas() {
     }
   }, [usuario.profesorId, version])
 
-  if (cargando) return <p className="text-neutral-400">Cargando rutinas...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando rutinas...</p>
+  if (error) return <p className="text-red-700">{error}</p>
 
   // Plantilla = rutina sin alumno. Las demás son copias ya asignadas.
   const plantillas = rutinas.filter((r) => r.alumnoId === null)
@@ -121,33 +121,33 @@ export default function Rutinas() {
         <h2 className="text-2xl font-bold">Rutinas</h2>
         <Link
           to="/profesor/rutinas/nueva"
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400"
+          className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80"
         >
           + Nueva plantilla
         </Link>
       </div>
 
       {aviso && (
-        <p className="mb-4 rounded-lg bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">{aviso}</p>
+        <p className="mb-4 rounded-lg bg-celeste/10 px-4 py-2 text-sm text-azul">{aviso}</p>
       )}
 
-      <h3 className="mb-3 text-lg font-semibold text-emerald-500">Mis plantillas</h3>
+      <h3 className="mb-3 text-lg font-semibold text-azul">Mis plantillas</h3>
       {plantillas.length === 0 ? (
-        <p className="mb-8 text-neutral-400">Todavía no creaste plantillas.</p>
+        <p className="mb-8 text-negro/70">Todavía no creaste plantillas.</p>
       ) : (
         <ul className="mb-8 flex flex-col gap-3">
           {plantillas.map((p) => (
-            <li key={p.id} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
+            <li key={p.id} className="rounded-2xl border border-negro/10 bg-gris p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="font-semibold">{p.nombre}</p>
-                  <p className="text-sm text-neutral-400">
+                  <p className="text-sm text-negro/70">
                     {p.duracionSemanas} {p.duracionSemanas === 1 ? 'semana' : 'semanas'} · {p.items.length} ejercicios
                   </p>
                 </div>
                 <button
                   onClick={() => setAsignando(asignando === p.id ? null : p.id)}
-                  className="rounded-lg border border-emerald-500/60 px-4 py-2 text-sm text-emerald-400 transition hover:bg-emerald-500/10"
+                  className="rounded-lg border border-celeste/60 px-4 py-2 text-sm text-azul transition hover:bg-celeste/10"
                 >
                   Asignar a un alumno
                 </button>
@@ -165,19 +165,19 @@ export default function Rutinas() {
         </ul>
       )}
 
-      <h3 className="mb-3 text-lg font-semibold text-emerald-500">Rutinas asignadas</h3>
+      <h3 className="mb-3 text-lg font-semibold text-azul">Rutinas asignadas</h3>
       {asignadas.length === 0 ? (
-        <p className="text-neutral-400">Todavía no asignaste rutinas.</p>
+        <p className="text-negro/70">Todavía no asignaste rutinas.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {asignadas.map((r) => (
             <li key={r.id}>
               <Link
                 to={`/profesor/alumnos/${r.alumnoId}`}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-sm transition hover:border-emerald-500/60"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-negro/10 bg-gris px-4 py-3 text-sm transition hover:border-celeste/60"
               >
                 <span className="font-medium">{r.nombre}</span>
-                <span className="text-neutral-400">
+                <span className="text-negro/70">
                   {r.nombreAlumno} · desde {r.fechaInicio}
                 </span>
               </Link>

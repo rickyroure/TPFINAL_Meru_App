@@ -3,7 +3,7 @@ import { planesService } from '../../services/planes'
 import { mensajeDeError } from '../../utils/errores'
 
 const claseInput =
-  'w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 
 const formatoPrecio = (precio) =>
   new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(precio)
@@ -37,17 +37,17 @@ function FormularioPlan({ plan, onGuardado, onCancelar }) {
   }
 
   return (
-    <form onSubmit={guardar} className="grid gap-3 rounded-2xl border border-emerald-500/40 bg-neutral-900 p-5 sm:grid-cols-4">
+    <form onSubmit={guardar} className="grid gap-3 rounded-2xl border border-celeste/40 bg-gris p-5 sm:grid-cols-4">
       <h3 className="font-semibold sm:col-span-4">{plan ? `Editar plan "${plan.nombre}"` : 'Nuevo plan'}</h3>
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         Nombre
         <input className={claseInput} value={nombre} onChange={(e) => setNombre(e.target.value)} />
       </label>
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         Precio (ARS)
         <input type="number" min="0" className={claseInput} value={precio} onChange={(e) => setPrecio(e.target.value)} />
       </label>
-      <label className="flex flex-col gap-1 text-xs text-neutral-400">
+      <label className="flex flex-col gap-1 text-xs text-negro/70">
         Duración (días)
         <input type="number" min="1" className={claseInput} value={duracion} onChange={(e) => setDuracion(e.target.value)} />
       </label>
@@ -55,19 +55,19 @@ function FormularioPlan({ plan, onGuardado, onCancelar }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Guardando...' : 'Guardar'}
         </button>
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800"
+          className="rounded-lg border border-negro/20 px-4 py-2 text-sm text-negro hover:bg-negro/10"
         >
           Cancelar
         </button>
       </div>
-      {error && <p className="text-sm text-red-400 sm:col-span-4">{error}</p>}
+      {error && <p className="text-sm text-red-700 sm:col-span-4">{error}</p>}
     </form>
   )
 }
@@ -106,15 +106,15 @@ export default function PlanesYTarifas() {
     setAviso(eraEdicion ? `Plan "${plan.nombre}" actualizado.` : `Plan "${plan.nombre}" creado.`)
   }
 
-  if (cargando) return <p className="text-neutral-400">Cargando planes...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando planes...</p>
+  if (error) return <p className="text-red-700">{error}</p>
 
   return (
     <div className="max-w-4xl">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold">Planes y tarifas</h2>
-          <p className="mt-1 text-sm text-neutral-400">Los cambios se ven al instante en la pantalla "Mi plan" de los alumnos.</p>
+          <p className="mt-1 text-sm text-negro/70">Los cambios se ven al instante en la pantalla "Mi plan" de los alumnos.</p>
         </div>
         {formulario === null && (
           <button
@@ -122,14 +122,14 @@ export default function PlanesYTarifas() {
               setAviso('')
               setFormulario('nuevo')
             }}
-            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400"
+            className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80"
           >
             + Nuevo plan
           </button>
         )}
       </div>
 
-      {aviso && <p className="mb-4 rounded-lg bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">{aviso}</p>}
+      {aviso && <p className="mb-4 rounded-lg bg-celeste/10 px-4 py-2 text-sm text-azul">{aviso}</p>}
 
       {formulario !== null && (
         <div className="mb-6">
@@ -143,28 +143,28 @@ export default function PlanesYTarifas() {
       )}
 
       {planes.length === 0 ? (
-        <p className="text-neutral-400">Todavía no hay planes creados.</p>
+        <p className="text-negro/70">Todavía no hay planes creados.</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {planes.map((p) => (
             <li
               key={p.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-neutral-800 bg-neutral-900 p-4"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-negro/10 bg-gris p-4"
             >
               <div>
                 <p className="font-semibold">{p.nombre}</p>
-                <p className="text-sm text-neutral-400">
+                <p className="text-sm text-negro/70">
                   {p.duracionDias} {p.duracionDias === 1 ? 'día' : 'días'}
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-lg font-semibold text-emerald-400">{formatoPrecio(p.precio)}</span>
+                <span className="text-lg font-semibold text-azul">{formatoPrecio(p.precio)}</span>
                 <button
                   onClick={() => {
                     setAviso('')
                     setFormulario(p)
                   }}
-                  className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm text-neutral-300 transition hover:bg-neutral-800"
+                  className="rounded-lg border border-negro/20 px-3 py-1.5 text-sm text-negro transition hover:bg-negro/10"
                 >
                   Editar
                 </button>

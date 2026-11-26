@@ -29,7 +29,7 @@ export default function InicioProfesor() {
     }
   }, [usuario.profesorId])
 
-  if (datos === null) return <p className="text-neutral-400">Cargando tu resumen...</p>
+  if (datos === null) return <p className="text-negro/70">Cargando tu resumen...</p>
   const [alumnos, rutinas, clases] = datos
 
   const sinApto = alumnos?.filter((a) => !a.aptoFisico).length ?? 0

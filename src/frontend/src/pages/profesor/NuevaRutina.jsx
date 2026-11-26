@@ -6,7 +6,7 @@ import { rutinasService } from '../../services/rutinas'
 import { mensajeDeError } from '../../utils/errores'
 
 const claseInput =
-  'w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 const SESIONES = ['A', 'B', 'C', 'D', 'E']
 
 // Convierte un campo de texto opcional en número (o null si está vacío).
@@ -128,18 +128,18 @@ export default function NuevaRutina() {
 
   return (
     <div className="max-w-4xl">
-      <Link to="/profesor/rutinas" className="text-sm text-emerald-400 hover:underline">
+      <Link to="/profesor/rutinas" className="text-sm text-azul hover:underline">
         ← Volver a rutinas
       </Link>
       <h2 className="mb-6 mt-3 text-2xl font-bold">Nueva plantilla de rutina</h2>
-      {errorCarga && <p className="mb-4 text-red-400">{errorCarga}</p>}
+      {errorCarga && <p className="mb-4 text-red-700">{errorCarga}</p>}
 
       <div className="mb-6 grid gap-3 sm:grid-cols-3">
-        <label className="flex flex-col gap-1 text-xs text-neutral-400 sm:col-span-2">
+        <label className="flex flex-col gap-1 text-xs text-negro/70 sm:col-span-2">
           Nombre de la rutina
           <input className={claseInput} value={nombre} onChange={(e) => setNombre(e.target.value)} />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="flex flex-col gap-1 text-xs text-negro/70">
           Duración (semanas)
           <input
             type="number"
@@ -151,14 +151,14 @@ export default function NuevaRutina() {
         </label>
       </div>
 
-      <form onSubmit={agregarEjercicio} className="mb-6 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+      <form onSubmit={agregarEjercicio} className="mb-6 rounded-2xl border border-negro/10 bg-gris p-5">
         <h3 className="mb-3 font-semibold">Agregar ejercicio</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             Semana
             <input type="number" min="1" className={claseInput} value={semana} onChange={(e) => setSemana(e.target.value)} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             Sesión
             <select className={claseInput} value={sesion} onChange={(e) => setSesion(e.target.value)}>
               {SESIONES.map((s) => (
@@ -168,7 +168,7 @@ export default function NuevaRutina() {
               ))}
             </select>
           </label>
-          <label className="col-span-2 flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="col-span-2 flex flex-col gap-1 text-xs text-negro/70">
             Ejercicio
             <select className={claseInput} value={ejercicioId} onChange={(e) => setEjercicioId(e.target.value)}>
               <option value="">Elegir...</option>
@@ -179,34 +179,34 @@ export default function NuevaRutina() {
               ))}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             Series
             <input type="number" min="1" className={claseInput} value={series} onChange={(e) => setSeries(e.target.value)} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             Reps
             <input type="number" min="1" className={claseInput} value={reps} onChange={(e) => setReps(e.target.value)} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             Pausa (seg)
             <input type="number" min="0" className={claseInput} value={pausa} onChange={(e) => setPausa(e.target.value)} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             Carga (% 1RM)
             <input type="number" min="0" max="100" step="0.5" className={claseInput} value={carga} onChange={(e) => setCarga(e.target.value)} />
           </label>
-          <label className="flex flex-col gap-1 text-xs text-neutral-400">
+          <label className="flex flex-col gap-1 text-xs text-negro/70">
             RPE (1-10)
             <input type="number" min="1" max="10" step="0.5" className={claseInput} value={rpe} onChange={(e) => setRpe(e.target.value)} />
           </label>
         </div>
         <button
           type="submit"
-          className="mt-4 rounded-lg border border-emerald-500/60 px-4 py-2 text-sm text-emerald-400 transition hover:bg-emerald-500/10"
+          className="mt-4 rounded-lg border border-celeste/60 px-4 py-2 text-sm text-azul transition hover:bg-celeste/10"
         >
           + Agregar a la rutina
         </button>
-        {errorItem && <p className="mt-2 text-sm text-red-400">{errorItem}</p>}
+        {errorItem && <p className="mt-2 text-sm text-red-700">{errorItem}</p>}
       </form>
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -215,7 +215,7 @@ export default function NuevaRutina() {
           <button
             type="button"
             onClick={repetirSemanaUno}
-            className="text-sm text-emerald-400 hover:underline"
+            className="text-sm text-azul hover:underline"
           >
             Repetir semana 1 en las demás semanas
           </button>
@@ -223,13 +223,13 @@ export default function NuevaRutina() {
       </div>
 
       {items.length === 0 ? (
-        <p className="mb-6 text-sm text-neutral-500">Todavía no agregaste ejercicios.</p>
+        <p className="mb-6 text-sm text-negro0">Todavía no agregaste ejercicios.</p>
       ) : (
         <div className="mb-6 flex flex-col gap-4">
           {semanasConItems.map((n) => (
-            <section key={n} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
-              <h4 className="mb-2 text-sm font-semibold text-emerald-500">Semana {n}</h4>
-              <ul className="divide-y divide-neutral-800 text-sm">
+            <section key={n} className="rounded-2xl border border-negro/10 bg-gris p-4">
+              <h4 className="mb-2 text-sm font-semibold text-azul">Semana {n}</h4>
+              <ul className="divide-y divide-negro/10 text-sm">
                 {items
                   .map((item, indice) => ({ item, indice }))
                   .filter(({ item }) => item.numeroSemana === n)
@@ -237,7 +237,7 @@ export default function NuevaRutina() {
                   .map(({ item, indice }) => (
                     <li key={indice} className="flex items-center justify-between gap-3 py-2">
                       <span>
-                        <span className="mr-2 rounded bg-neutral-800 px-2 py-0.5 text-xs">Sesión {item.sesion}</span>
+                        <span className="mr-2 rounded bg-negro/10 px-2 py-0.5 text-xs">Sesión {item.sesion}</span>
                         {nombreDe(item.ejercicioId)} · {item.series}×{item.reps}
                         {item.cargaPct != null && ` · ${item.cargaPct}%`}
                         {item.rpe != null && ` · RPE ${item.rpe}`}
@@ -245,7 +245,7 @@ export default function NuevaRutina() {
                       <button
                         type="button"
                         onClick={() => quitar(indice)}
-                        className="text-xs text-red-400 hover:underline"
+                        className="text-xs text-red-700 hover:underline"
                       >
                         Quitar
                       </button>
@@ -261,11 +261,11 @@ export default function NuevaRutina() {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-5 py-2.5 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Guardando...' : 'Guardar plantilla'}
         </button>
-        {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
       </form>
     </div>
   )

@@ -4,13 +4,13 @@ import { alumnosService } from '../../services/alumnos'
 import { mensajeDeError } from '../../utils/errores'
 
 const claseInput =
-  'rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 outline-none focus:border-emerald-500'
+  'rounded-lg border border-negro/20 bg-fondo px-3 py-2 outline-none focus:border-celeste'
 
 // Dato que se muestra pero no se puede editar.
 function DatoFijo({ titulo, children }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-wide text-neutral-500">{titulo}</p>
+      <p className="text-xs uppercase tracking-wide text-negro0">{titulo}</p>
       <p className="mt-1 text-sm">{children}</p>
     </div>
   )
@@ -79,12 +79,12 @@ function FormularioPerfil({ perfil, alumnoId, alGuardar }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-4 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Guardando...' : 'Guardar cambios'}
         </button>
-        {exito && <p className="text-sm text-emerald-400">Perfil actualizado correctamente.</p>}
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {exito && <p className="text-sm text-azul">Perfil actualizado correctamente.</p>}
+        {error && <p className="text-sm text-red-700">{error}</p>}
       </div>
     </form>
   )
@@ -124,24 +124,24 @@ export default function MiPerfil() {
     }
   }
 
-  if (cargando) return <p className="text-neutral-400">Cargando perfil...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando perfil...</p>
+  if (error) return <p className="text-red-700">{error}</p>
 
   return (
     <div className="max-w-3xl">
       <h2 className="text-2xl font-bold">Mi perfil</h2>
-      <p className="mb-6 mt-1 text-sm text-neutral-400">
+      <p className="mb-6 mt-1 text-sm text-negro/70">
         Mantené tus datos personales actualizados.
       </p>
 
-      <section className="mb-6 rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+      <section className="mb-6 rounded-2xl border border-negro/10 bg-gris p-6">
         <h3 className="mb-4 font-semibold">Datos personales</h3>
         <FormularioPerfil perfil={perfil} alumnoId={usuario.alumnoId} alGuardar={alGuardarPerfil} />
       </section>
 
-      <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+      <section className="rounded-2xl border border-negro/10 bg-gris p-6">
         <h3 className="mb-1 font-semibold">Información del gimnasio</h3>
-        <p className="mb-4 text-xs text-neutral-500">
+        <p className="mb-4 text-xs text-negro0">
           Estos datos los gestiona la administración y no se pueden editar.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -149,11 +149,11 @@ export default function MiPerfil() {
           <DatoFijo titulo="Fecha de ingreso">{perfil.fechaIngreso}</DatoFijo>
           <DatoFijo titulo="Apto físico">
             {perfil.aptoFisico ? (
-              <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-400">
+              <span className="rounded-full bg-celeste/15 px-2 py-0.5 text-azul">
                 Vigente
               </span>
             ) : (
-              <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-red-400">
+              <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-red-700">
                 Pendiente
               </span>
             )}

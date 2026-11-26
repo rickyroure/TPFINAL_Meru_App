@@ -4,13 +4,13 @@ import { rutinasService } from '../../services/rutinas'
 import { mensajeDeError } from '../../utils/errores'
 
 const claseInput =
-  'w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 
 // Etiqueta chica con un dato de la prescripción (series, pausa, RPE...).
 function Dato({ titulo, valor }) {
   return (
-    <div className="rounded-lg bg-neutral-950 px-3 py-2 text-center">
-      <p className="text-[10px] uppercase tracking-wide text-neutral-500">{titulo}</p>
+    <div className="rounded-lg bg-fondo px-3 py-2 text-center">
+      <p className="text-[10px] uppercase tracking-wide text-negro0">{titulo}</p>
       <p className="text-sm font-medium">{valor}</p>
     </div>
   )
@@ -66,7 +66,7 @@ function TarjetaEjercicio({ plan }) {
   }
 
   return (
-    <article className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+    <article className="rounded-2xl border border-negro/10 bg-gris p-5">
       <h4 className="mb-3 font-semibold">{plan.nombreEjercicio}</h4>
 
       <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
@@ -77,16 +77,16 @@ function TarjetaEjercicio({ plan }) {
         <Dato titulo="RPE" valor={plan.rpe ?? '-'} />
       </div>
 
-      <h5 className="mb-2 text-xs uppercase tracking-wide text-neutral-500">Lo que hice</h5>
+      <h5 className="mb-2 text-xs uppercase tracking-wide text-negro0">Lo que hice</h5>
       {cargandoProgreso ? (
-        <p className="text-sm text-neutral-500">Cargando...</p>
+        <p className="text-sm text-negro0">Cargando...</p>
       ) : progreso.length === 0 ? (
-        <p className="text-sm text-neutral-500">Todavía no registraste ninguna serie.</p>
+        <p className="text-sm text-negro0">Todavía no registraste ninguna serie.</p>
       ) : (
-        <ul className="mb-3 divide-y divide-neutral-800 text-sm">
+        <ul className="mb-3 divide-y divide-negro/10 text-sm">
           {progreso.map((p) => (
             <li key={p.id} className="flex justify-between py-1.5">
-              <span className="text-neutral-400">
+              <span className="text-negro/70">
                 Serie {p.numeroSerie} · {p.fecha}
               </span>
               <span>
@@ -98,7 +98,7 @@ function TarjetaEjercicio({ plan }) {
       )}
 
       <form onSubmit={registrar} className="mt-3 grid grid-cols-3 items-end gap-2 sm:grid-cols-4">
-        <label className="flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="flex flex-col gap-1 text-xs text-negro/70">
           Serie
           <input
             type="number"
@@ -108,7 +108,7 @@ function TarjetaEjercicio({ plan }) {
             onChange={(e) => setNumeroSerie(e.target.value)}
           />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="flex flex-col gap-1 text-xs text-negro/70">
           Peso (kg)
           <input
             type="number"
@@ -119,7 +119,7 @@ function TarjetaEjercicio({ plan }) {
             onChange={(e) => setPeso(e.target.value)}
           />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="flex flex-col gap-1 text-xs text-negro/70">
           Reps
           <input
             type="number"
@@ -132,12 +132,12 @@ function TarjetaEjercicio({ plan }) {
         <button
           type="submit"
           disabled={guardando}
-          className="col-span-3 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60 sm:col-span-1"
+          className="col-span-3 rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60 sm:col-span-1"
         >
           {guardando ? 'Guardando...' : 'Registrar'}
         </button>
       </form>
-      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-700">{error}</p>}
     </article>
   )
 }
@@ -167,13 +167,13 @@ export default function MiRutina() {
     }
   }, [usuario.alumnoId])
 
-  if (cargando) return <p className="text-neutral-400">Cargando rutina...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando rutina...</p>
+  if (error) return <p className="text-red-700">{error}</p>
   if (rutinas.length === 0) {
     return (
       <div>
         <h2 className="text-2xl font-bold">Mi rutina</h2>
-        <p className="mt-2 text-neutral-400">Todavía no tenés una rutina asignada. Hablá con tu profesor.</p>
+        <p className="mt-2 text-negro/70">Todavía no tenés una rutina asignada. Hablá con tu profesor.</p>
       </div>
     )
   }
@@ -187,7 +187,7 @@ export default function MiRutina() {
   return (
     <div className="max-w-4xl">
       <h2 className="text-2xl font-bold">{rutina.nombre}</h2>
-      <p className="mb-6 mt-1 text-sm text-neutral-400">
+      <p className="mb-6 mt-1 text-sm text-negro/70">
         Profesor: {rutina.nombreProfesor} · Inicio: {rutina.fechaInicio} · {rutina.duracionSemanas} semanas
       </p>
 
@@ -198,8 +198,8 @@ export default function MiRutina() {
             onClick={() => setSemana(n)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
               n === semana
-                ? 'bg-emerald-500/15 text-emerald-400'
-                : 'border border-neutral-700 text-neutral-300 hover:bg-neutral-800'
+                ? 'bg-celeste/15 text-azul'
+                : 'border border-negro/20 text-negro hover:bg-negro/10'
             }`}
           >
             Semana {n}
@@ -209,7 +209,7 @@ export default function MiRutina() {
 
       {sesiones.map((sesion) => (
         <section key={sesion} className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold text-emerald-500">Sesión {sesion}</h3>
+          <h3 className="mb-3 text-lg font-semibold text-azul">Sesión {sesion}</h3>
           <div className="flex flex-col gap-4">
             {itemsDeLaSemana
               .filter((i) => i.sesion === sesion)

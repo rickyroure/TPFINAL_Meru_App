@@ -15,10 +15,10 @@ function formatearHorario(iso) {
 }
 
 const ESTILO_ESTADO = {
-  CONFIRMADA: { texto: 'Confirmada', clase: 'bg-emerald-500/15 text-emerald-400' },
-  CANCELADA: { texto: 'Cancelada', clase: 'bg-neutral-700/40 text-neutral-400' },
-  ASISTIO: { texto: 'Asististe', clase: 'bg-sky-500/15 text-sky-400' },
-  NO_ASISTIO: { texto: 'No asististe', clase: 'bg-red-500/15 text-red-400' },
+  CONFIRMADA: { texto: 'Confirmada', clase: 'bg-celeste/15 text-azul' },
+  CANCELADA: { texto: 'Cancelada', clase: 'bg-negro/10 text-negro/70' },
+  ASISTIO: { texto: 'Asististe', clase: 'bg-sky-500/15 text-sky-700' },
+  NO_ASISTIO: { texto: 'No asististe', clase: 'bg-red-500/15 text-red-700' },
 }
 
 export default function Clases() {
@@ -80,8 +80,8 @@ export default function Clases() {
       'Reserva cancelada.',
     )
 
-  if (cargando) return <p className="text-neutral-400">Cargando clases...</p>
-  if (errorCarga) return <p className="text-red-400">{errorCarga}</p>
+  if (cargando) return <p className="text-negro/70">Cargando clases...</p>
+  if (errorCarga) return <p className="text-red-700">{errorCarga}</p>
 
   const idsReservados = new Set(
     reservas.filter((r) => r.estado === 'CONFIRMADA').map((r) => r.claseId),
@@ -91,23 +91,23 @@ export default function Clases() {
   return (
     <div className="max-w-4xl">
       <h2 className="text-2xl font-bold">Clases</h2>
-      <p className="mb-6 mt-1 text-sm text-neutral-400">
+      <p className="mb-6 mt-1 text-sm text-negro/70">
         Reservá tu lugar. Podés cancelar hasta 30 minutos antes del inicio.
       </p>
 
       {mensaje && (
         <p
           className={`mb-4 rounded-lg px-3 py-2 text-sm ${
-            mensaje.tipo === 'exito' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
+            mensaje.tipo === 'exito' ? 'bg-celeste/15 text-azul' : 'bg-red-500/15 text-red-700'
           }`}
         >
           {mensaje.texto}
         </p>
       )}
 
-      <h3 className="mb-3 text-lg font-semibold text-emerald-500">Clases disponibles</h3>
+      <h3 className="mb-3 text-lg font-semibold text-azul">Clases disponibles</h3>
       {clases.length === 0 ? (
-        <p className="mb-8 text-sm text-neutral-500">No hay clases próximas.</p>
+        <p className="mb-8 text-sm text-negro0">No hay clases próximas.</p>
       ) : (
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           {clases.map((clase) => {
@@ -116,15 +116,15 @@ export default function Clases() {
             return (
               <article
                 key={clase.id}
-                className="flex flex-col justify-between rounded-2xl border border-neutral-800 bg-neutral-900 p-5"
+                className="flex flex-col justify-between rounded-2xl border border-negro/10 bg-gris p-5"
               >
                 <div>
                   <h4 className="font-semibold">{clase.tipoActividad}</h4>
-                  <p className="mt-1 text-sm capitalize text-neutral-400">
+                  <p className="mt-1 text-sm capitalize text-negro/70">
                     {formatearHorario(clase.horario)}
                   </p>
-                  <p className="text-sm text-neutral-500">Profesor: {clase.nombreProfesor}</p>
-                  <p className={`mt-2 text-sm ${sinCupo ? 'text-red-400' : 'text-neutral-300'}`}>
+                  <p className="text-sm text-negro0">Profesor: {clase.nombreProfesor}</p>
+                  <p className={`mt-2 text-sm ${sinCupo ? 'text-red-700' : 'text-negro'}`}>
                     {sinCupo
                       ? 'Sin cupo'
                       : `${clase.cupoDisponible} de ${clase.cupoMaximo} lugares libres`}
@@ -133,7 +133,7 @@ export default function Clases() {
                 <button
                   onClick={() => reservar(clase)}
                   disabled={reservada || sinCupo || accionEnCurso !== null}
-                  className="mt-4 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-neutral-800 disabled:text-neutral-500"
+                  className="mt-4 rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:cursor-not-allowed disabled:bg-negro/10 disabled:text-negro0"
                 >
                   {accionEnCurso === `reservar-${clase.id}`
                     ? 'Reservando...'
@@ -149,18 +149,18 @@ export default function Clases() {
         </div>
       )}
 
-      <h3 className="mb-3 text-lg font-semibold text-emerald-500">Mis reservas</h3>
+      <h3 className="mb-3 text-lg font-semibold text-azul">Mis reservas</h3>
       {misReservas.length === 0 ? (
-        <p className="text-sm text-neutral-500">Todavía no tenés reservas.</p>
+        <p className="text-sm text-negro0">Todavía no tenés reservas.</p>
       ) : (
-        <ul className="divide-y divide-neutral-800 rounded-2xl border border-neutral-800 bg-neutral-900">
+        <ul className="divide-y divide-negro/10 rounded-2xl border border-negro/10 bg-gris">
           {misReservas.map((reserva) => {
             const estilo = ESTILO_ESTADO[reserva.estado]
             return (
               <li key={reserva.id} className="flex items-center justify-between gap-4 p-4">
                 <div>
                   <p className="font-medium">{reserva.tipoActividadClase}</p>
-                  <p className="text-sm capitalize text-neutral-400">
+                  <p className="text-sm capitalize text-negro/70">
                     {formatearHorario(reserva.horarioClase)}
                   </p>
                 </div>
@@ -172,7 +172,7 @@ export default function Clases() {
                     <button
                       onClick={() => cancelar(reserva)}
                       disabled={accionEnCurso !== null}
-                      className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm transition hover:bg-neutral-800 disabled:opacity-50"
+                      className="rounded-lg border border-negro/20 px-3 py-1.5 text-sm transition hover:bg-negro/10 disabled:opacity-50"
                     >
                       {accionEnCurso === `cancelar-${reserva.id}` ? 'Cancelando...' : 'Cancelar'}
                     </button>

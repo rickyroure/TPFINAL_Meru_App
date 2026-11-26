@@ -9,8 +9,8 @@ import { useState } from 'react'
 const ANCHO_DEFECTO = 640 // ancho lógico del dibujo; el SVG se escala al ancho de la tarjeta
 const ALTO = 240
 const MARGEN = { izq: 56, der: 12, sup: 22, inf: 28 }
-const COLOR_GRILLA = '#262626'
-const COLOR_TEXTO = '#a3a3a3'
+const COLOR_GRILLA = 'rgba(30, 30, 36, 0.15)' // Negro Deportivo, tenue
+const COLOR_TEXTO = 'rgba(30, 30, 36, 0.7)' // Negro Deportivo
 
 // Marcas del eje Y redondeadas (0, 100, 200...) que cubren el valor máximo.
 function marcasEjeY(maximo) {
@@ -97,7 +97,7 @@ export default function GraficoColumnas({
                   textAnchor="middle"
                   fontSize="11"
                   fontWeight="600"
-                  fill="#f5f5f5"
+                  fill="#1e1e24"
                 >
                   {formato(totales[i], true)}
                 </text>
@@ -129,7 +129,7 @@ export default function GraficoColumnas({
 
       {activa !== null && (
         <div
-          className={`pointer-events-none absolute top-2 z-10 min-w-36 rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-xs shadow-lg ${
+          className={`pointer-events-none absolute top-2 z-10 min-w-36 rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-xs shadow-lg ${
             activa < categorias.length / 2 ? '' : '-translate-x-full'
           }`}
           // El cuadro se abre al costado de la columna para no tapar su parte alta.
@@ -137,12 +137,12 @@ export default function GraficoColumnas({
             left: `${((MARGEN.izq + banda * (activa < categorias.length / 2 ? activa + 1 : activa)) / ANCHO) * 100}%`,
           }}
         >
-          <p className="mb-1 text-neutral-400">{categorias[activa].titulo}</p>
+          <p className="mb-1 text-negro/70">{categorias[activa].titulo}</p>
           {categorias[activa].valores.map((valor, k) => (
             <p key={k} className="flex items-center gap-2">
               <span className="inline-block h-0.5 w-3" style={{ backgroundColor: series[k].color }} />
-              <span className="font-semibold text-neutral-50">{formato(valor)}</span>
-              {series.length > 1 && <span className="text-neutral-400">{series[k].nombre}</span>}
+              <span className="font-semibold text-negro">{formato(valor)}</span>
+              {series.length > 1 && <span className="text-negro/70">{series[k].nombre}</span>}
             </p>
           ))}
         </div>

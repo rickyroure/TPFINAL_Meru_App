@@ -16,7 +16,7 @@ const formatearPrecio = (valor) =>
 
 const claseBotonPestana = (activa) =>
   `rounded-lg px-4 py-2 text-sm font-medium transition ${
-    activa ? 'bg-emerald-500 text-neutral-950' : 'border border-neutral-700 text-neutral-300 hover:bg-neutral-800'
+    activa ? 'bg-celeste text-negro' : 'border border-negro/20 text-negro hover:bg-negro/10'
   }`
 
 export default function Shop() {
@@ -104,7 +104,7 @@ export default function Shop() {
   return (
     <div className="max-w-5xl">
       <h2 className="text-2xl font-bold">Shop</h2>
-      <p className="mb-5 mt-1 text-sm text-neutral-400">Suplementos y accesorios para tu entrenamiento.</p>
+      <p className="mb-5 mt-1 text-sm text-negro/70">Suplementos y accesorios para tu entrenamiento.</p>
 
       <div className="mb-6 flex gap-2">
         <button onClick={() => setPestana('tienda')} className={claseBotonPestana(pestana === 'tienda')}>
@@ -118,16 +118,16 @@ export default function Shop() {
       {pestana === 'compras' ? (
         <MisCompras alumnoId={usuario.alumnoId} />
       ) : cargando ? (
-        <p className="text-neutral-400">Cargando productos...</p>
+        <p className="text-negro/70">Cargando productos...</p>
       ) : errorCarga ? (
-        <p className="text-red-400">{errorCarga}</p>
+        <p className="text-red-700">{errorCarga}</p>
       ) : (
         <div className="grid gap-6 lg:grid-cols-3">
           <section className="lg:col-span-2">
             {mensaje && (
               <p
                 className={`mb-4 rounded-lg px-3 py-2 text-sm ${
-                  mensaje.tipo === 'exito' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
+                  mensaje.tipo === 'exito' ? 'bg-celeste/15 text-azul' : 'bg-red-500/15 text-red-700'
                 }`}
               >
                 {mensaje.texto}
@@ -135,7 +135,7 @@ export default function Shop() {
             )}
 
             {productos.length === 0 ? (
-              <p className="text-neutral-400">Todavía no hay productos disponibles.</p>
+              <p className="text-negro/70">Todavía no hay productos disponibles.</p>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 {productos.map((p) => {
@@ -145,25 +145,25 @@ export default function Shop() {
                   return (
                     <article
                       key={p.id}
-                      className="flex flex-col justify-between rounded-2xl border border-neutral-800 bg-neutral-900 p-5"
+                      className="flex flex-col justify-between rounded-2xl border border-negro/10 bg-gris p-5"
                     >
                       <div>
                         <h3 className="font-semibold">{p.nombre}</h3>
                         <p className="mt-2 text-2xl font-bold">{formatearPrecio(p.precio)}</p>
                         {sinStock ? (
-                          <p className="mt-1 text-sm text-red-400">Sin stock</p>
+                          <p className="mt-1 text-sm text-red-700">Sin stock</p>
                         ) : p.stock <= STOCK_BAJO ? (
-                          <p className="mt-1 text-sm text-amber-400">
+                          <p className="mt-1 text-sm text-amber-700">
                             ¡Últimas {p.stock} {p.stock === 1 ? 'unidad' : 'unidades'}!
                           </p>
                         ) : (
-                          <p className="mt-1 text-sm text-neutral-400">{p.stock} disponibles</p>
+                          <p className="mt-1 text-sm text-negro/70">{p.stock} disponibles</p>
                         )}
                       </div>
                       <button
                         onClick={() => cambiarCantidad(p, 1)}
                         disabled={sinStock || alLimite || pagando}
-                        className="mt-4 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="mt-4 rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         {enCarrito > 0 ? `Agregar otro (${enCarrito} en el carrito)` : 'Agregar al carrito'}
                       </button>
@@ -174,16 +174,16 @@ export default function Shop() {
             )}
           </section>
 
-          <aside className="h-fit rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+          <aside className="h-fit rounded-2xl border border-negro/10 bg-gris p-5">
             <h3 className="mb-4 font-semibold">
-              Carrito {cantidadTotal > 0 && <span className="text-neutral-500">({cantidadTotal})</span>}
+              Carrito {cantidadTotal > 0 && <span className="text-negro0">({cantidadTotal})</span>}
             </h3>
 
             {lineas.length === 0 ? (
-              <p className="text-sm text-neutral-500">Todavía no agregaste productos.</p>
+              <p className="text-sm text-negro0">Todavía no agregaste productos.</p>
             ) : (
               <>
-                <ul className="divide-y divide-neutral-800">
+                <ul className="divide-y divide-negro/10">
                   {lineas.map(({ producto, cantidad }) => (
                     <li key={producto.id} className="py-3">
                       <p className="text-sm font-medium">{producto.nombre}</p>
@@ -193,7 +193,7 @@ export default function Shop() {
                             onClick={() => cambiarCantidad(producto, -1)}
                             disabled={pagando}
                             aria-label={`Quitar una unidad de ${producto.nombre}`}
-                            className="h-7 w-7 rounded-md border border-neutral-700 text-neutral-300 transition hover:bg-neutral-800 disabled:opacity-40"
+                            className="h-7 w-7 rounded-md border border-negro/20 text-negro transition hover:bg-negro/10 disabled:opacity-40"
                           >
                             −
                           </button>
@@ -202,12 +202,12 @@ export default function Shop() {
                             onClick={() => cambiarCantidad(producto, 1)}
                             disabled={pagando || cantidad >= producto.stock}
                             aria-label={`Agregar una unidad de ${producto.nombre}`}
-                            className="h-7 w-7 rounded-md border border-neutral-700 text-neutral-300 transition hover:bg-neutral-800 disabled:opacity-40"
+                            className="h-7 w-7 rounded-md border border-negro/20 text-negro transition hover:bg-negro/10 disabled:opacity-40"
                           >
                             +
                           </button>
                         </div>
-                        <span className="text-sm text-neutral-300">
+                        <span className="text-sm text-negro">
                           {formatearPrecio(producto.precio * cantidad)}
                         </span>
                       </div>
@@ -215,21 +215,21 @@ export default function Shop() {
                   ))}
                 </ul>
 
-                <div className="mt-4 flex items-center justify-between border-t border-neutral-800 pt-4">
-                  <span className="text-sm text-neutral-400">Total</span>
-                  <span className="text-xl font-bold text-emerald-400">{formatearPrecio(total)}</span>
+                <div className="mt-4 flex items-center justify-between border-t border-negro/10 pt-4">
+                  <span className="text-sm text-negro/70">Total</span>
+                  <span className="text-xl font-bold text-azul">{formatearPrecio(total)}</span>
                 </div>
                 <button
                   onClick={pagar}
                   disabled={pagando}
-                  className="mt-4 w-full rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+                  className="mt-4 w-full rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
                 >
                   {pagando ? 'Procesando...' : 'Pagar con Mercado Pago'}
                 </button>
                 <button
                   onClick={() => setCarrito({})}
                   disabled={pagando}
-                  className="mt-2 w-full rounded-lg border border-neutral-700 px-3 py-2 text-sm text-neutral-300 transition hover:bg-neutral-800 disabled:opacity-50"
+                  className="mt-2 w-full rounded-lg border border-negro/20 px-3 py-2 text-sm text-negro transition hover:bg-negro/10 disabled:opacity-50"
                 >
                   Vaciar carrito
                 </button>

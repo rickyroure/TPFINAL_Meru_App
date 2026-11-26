@@ -7,8 +7,8 @@ import { mensajeDeError } from '../../utils/errores'
 import Seccion1RM from '../../components/Seccion1RM'
 function Dato({ titulo, valor }) {
   return (
-    <div className="rounded-lg bg-neutral-950 px-3 py-2 text-center">
-      <p className="text-[10px] uppercase tracking-wide text-neutral-500">{titulo}</p>
+    <div className="rounded-lg bg-fondo px-3 py-2 text-center">
+      <p className="text-[10px] uppercase tracking-wide text-negro0">{titulo}</p>
       <p className="text-sm font-medium">{valor}</p>
     </div>
   )
@@ -39,7 +39,7 @@ function TarjetaEjercicio({ plan }) {
   }, [plan.id])
 
   return (
-    <article className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+    <article className="rounded-2xl border border-negro/10 bg-gris p-5">
       <h4 className="mb-3 font-semibold">{plan.nombreEjercicio}</h4>
       <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
         <Dato titulo="Series" valor={plan.series} />
@@ -49,18 +49,18 @@ function TarjetaEjercicio({ plan }) {
         <Dato titulo="RPE" valor={plan.rpe ?? '-'} />
       </div>
 
-      <h5 className="mb-2 text-xs uppercase tracking-wide text-neutral-500">Lo que hizo el alumno</h5>
+      <h5 className="mb-2 text-xs uppercase tracking-wide text-negro0">Lo que hizo el alumno</h5>
       {cargando ? (
-        <p className="text-sm text-neutral-500">Cargando...</p>
+        <p className="text-sm text-negro0">Cargando...</p>
       ) : error ? (
-        <p className="text-sm text-red-400">{error}</p>
+        <p className="text-sm text-red-700">{error}</p>
       ) : progreso.length === 0 ? (
-        <p className="text-sm text-neutral-500">Todavía no registró ninguna serie.</p>
+        <p className="text-sm text-negro0">Todavía no registró ninguna serie.</p>
       ) : (
-        <ul className="divide-y divide-neutral-800 text-sm">
+        <ul className="divide-y divide-negro/10 text-sm">
           {progreso.map((p) => (
             <li key={p.id} className="flex justify-between py-1.5">
-              <span className="text-neutral-400">
+              <span className="text-negro/70">
                 Serie {p.numeroSerie} · {p.fecha}
               </span>
               <span>
@@ -106,18 +106,18 @@ export default function DetalleAlumno() {
   }, [id, usuario.profesorId])
 
   const volver = (
-    <Link to="/profesor/alumnos" className="text-sm text-emerald-400 hover:underline">
+    <Link to="/profesor/alumnos" className="text-sm text-azul hover:underline">
       ← Volver a mis alumnos
     </Link>
   )
 
-  if (cargando) return <p className="text-neutral-400">Cargando alumno...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando alumno...</p>
+  if (error) return <p className="text-red-700">{error}</p>
   if (!alumno) {
     return (
       <div>
         {volver}
-        <p className="mt-4 text-neutral-400">Ese alumno no está entre tus alumnos asignados.</p>
+        <p className="mt-4 text-negro/70">Ese alumno no está entre tus alumnos asignados.</p>
       </div>
     )
   }
@@ -137,24 +137,24 @@ export default function DetalleAlumno() {
         </h2>
         <span
           className={`rounded-full px-3 py-1 text-xs font-medium ${
-            alumno.aptoFisico ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
+            alumno.aptoFisico ? 'bg-celeste/15 text-azul' : 'bg-amber-500/15 text-amber-700'
           }`}
         >
           {alumno.aptoFisico ? 'Apto físico' : 'Sin apto físico'}
         </span>
       </div>
-      <p className="mb-6 text-sm text-neutral-400">
+      <p className="mb-6 text-sm text-negro/70">
         {alumno.email} · Ingresó el {alumno.fechaIngreso}
       </p>
       <Seccion1RM alumnoId={id} />
       {!rutina ? (
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5 text-neutral-400">
+        <div className="rounded-2xl border border-negro/10 bg-gris p-5 text-negro/70">
           Este alumno todavía no tiene una rutina asignada.
         </div>
       ) : (
         <>
           <h3 className="text-xl font-semibold">{rutina.nombre}</h3>
-          <p className="mb-4 mt-1 text-sm text-neutral-400">
+          <p className="mb-4 mt-1 text-sm text-negro/70">
             Inicio: {rutina.fechaInicio} · {rutina.duracionSemanas} semanas
           </p>
 
@@ -165,8 +165,8 @@ export default function DetalleAlumno() {
                 onClick={() => setSemana(n)}
                 className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
                   n === semana
-                    ? 'bg-emerald-500/15 text-emerald-400'
-                    : 'border border-neutral-700 text-neutral-300 hover:bg-neutral-800'
+                    ? 'bg-celeste/15 text-azul'
+                    : 'border border-negro/20 text-negro hover:bg-negro/10'
                 }`}
               >
                 Semana {n}
@@ -176,7 +176,7 @@ export default function DetalleAlumno() {
 
           {sesiones.map((sesion) => (
             <section key={sesion} className="mb-8">
-              <h4 className="mb-3 text-lg font-semibold text-emerald-500">Sesión {sesion}</h4>
+              <h4 className="mb-3 text-lg font-semibold text-azul">Sesión {sesion}</h4>
               <div className="flex flex-col gap-4">
                 {itemsDeLaSemana
                   .filter((i) => i.sesion === sesion)

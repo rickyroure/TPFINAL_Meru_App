@@ -2,10 +2,10 @@
 export default function TablaDatos({ columnas, filas }) {
   return (
     <details className="mt-4">
-      <summary className="cursor-pointer text-sm text-emerald-400">Ver como tabla</summary>
+      <summary className="cursor-pointer text-sm text-azul">Ver como tabla</summary>
       <div className="mt-2 overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase tracking-wide text-neutral-500">
+          <thead className="text-xs uppercase tracking-wide text-negro0">
             <tr>
               {columnas.map((c) => (
                 <th key={c} className="py-1.5 pr-4 font-medium">
@@ -14,11 +14,11 @@ export default function TablaDatos({ columnas, filas }) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-800">
+          <tbody className="divide-y divide-negro/10">
             {filas.map((fila, i) => (
               <tr key={i}>
                 {fila.map((celda, j) => (
-                  <td key={j} className="py-1.5 pr-4 tabular-nums text-neutral-300">
+                  <td key={j} className="py-1.5 pr-4 tabular-nums text-negro">
                     {celda}
                   </td>
                 ))}

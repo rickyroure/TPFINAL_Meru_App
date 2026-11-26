@@ -17,9 +17,9 @@ function formatearFechaHora(iso) {
 }
 
 const ESTILO_ESTADO = {
-  PENDIENTE: { texto: 'Pendiente de pago', clase: 'bg-amber-500/15 text-amber-400' },
-  PAGADA: { texto: 'Pagada', clase: 'bg-emerald-500/15 text-emerald-400' },
-  CANCELADA: { texto: 'Cancelada', clase: 'bg-red-500/15 text-red-400' },
+  PENDIENTE: { texto: 'Pendiente de pago', clase: 'bg-amber-500/15 text-amber-700' },
+  PAGADA: { texto: 'Pagada', clase: 'bg-celeste/15 text-azul' },
+  CANCELADA: { texto: 'Cancelada', clase: 'bg-red-500/15 text-red-700' },
 }
 
 export default function MisCompras({ alumnoId }) {
@@ -49,8 +49,8 @@ export default function MisCompras({ alumnoId }) {
     }
   }, [alumnoId, version])
 
-  if (cargando) return <p className="text-neutral-400">Cargando compras...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando compras...</p>
+  if (error) return <p className="text-red-700">{error}</p>
 
   // Las más nuevas primero (el backend no garantiza un orden).
   const ordenadas = [...ordenes].sort((a, b) => b.fecha.localeCompare(a.fecha))
@@ -59,45 +59,45 @@ export default function MisCompras({ alumnoId }) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-neutral-400">
+        <p className="text-sm text-negro/70">
           {hayPendientes
             ? 'Si ya pagaste en Mercado Pago, la orden puede tardar un momento en confirmarse.'
             : 'Acá ves el historial de tus compras.'}
         </p>
         <button
           onClick={() => setVersion((v) => v + 1)}
-          className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm text-neutral-300 transition hover:bg-neutral-800"
+          className="rounded-lg border border-negro/20 px-3 py-1.5 text-sm text-negro transition hover:bg-negro/10"
         >
           Actualizar
         </button>
       </div>
 
       {ordenadas.length === 0 ? (
-        <p className="text-sm text-neutral-500">Todavía no hiciste ninguna compra.</p>
+        <p className="text-sm text-negro0">Todavía no hiciste ninguna compra.</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {ordenadas.map((o) => {
             const estilo = ESTILO_ESTADO[o.estado] ?? ESTILO_ESTADO.PENDIENTE
             return (
-              <li key={o.id} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
+              <li key={o.id} className="rounded-2xl border border-negro/10 bg-gris p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="font-semibold">Orden #{o.id}</p>
-                    <p className="text-xs text-neutral-500">{formatearFechaHora(o.fecha)}</p>
+                    <p className="text-xs text-negro0">{formatearFechaHora(o.fecha)}</p>
                   </div>
                   <span className={`rounded-full px-2 py-0.5 text-xs ${estilo.clase}`}>{estilo.texto}</span>
                 </div>
-                <ul className="mt-3 divide-y divide-neutral-800 text-sm">
+                <ul className="mt-3 divide-y divide-negro/10 text-sm">
                   {o.items.map((i) => (
                     <li key={i.id} className="flex justify-between gap-4 py-1.5">
-                      <span className="text-neutral-300">
+                      <span className="text-negro">
                         {i.cantidad} × {i.productoNombre}
                       </span>
-                      <span className="text-neutral-400">{formatearPrecio(i.subtotal)}</span>
+                      <span className="text-negro/70">{formatearPrecio(i.subtotal)}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-3 text-right font-semibold text-emerald-400">
+                <p className="mt-3 text-right font-semibold text-azul">
                   Total {formatearPrecio(o.total)}
                 </p>
               </li>

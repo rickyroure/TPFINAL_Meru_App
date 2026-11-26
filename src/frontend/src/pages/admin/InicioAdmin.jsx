@@ -32,7 +32,7 @@ export default function InicioAdmin() {
     }
   }, [anio])
 
-  if (datos === null) return <p className="text-neutral-400">Cargando el resumen...</p>
+  if (datos === null) return <p className="text-negro/70">Cargando el resumen...</p>
   const [ingresos, planes, productos, clases] = datos
 
   const sinStock = productos?.filter((p) => p.stock <= 0).length ?? 0

@@ -8,7 +8,7 @@ export default function Bienvenida({ descripcion, children }) {
   return (
     <div className="max-w-4xl">
       <h2 className="text-2xl font-bold">Hola, {usuario.nombre}</h2>
-      <p className="mb-6 mt-1 text-neutral-400">{descripcion}</p>
+      <p className="mb-6 mt-1 text-negro/70">{descripcion}</p>
       {children}
     </div>
   )

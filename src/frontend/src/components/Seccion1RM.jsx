@@ -4,7 +4,7 @@ import { rmService } from '../services/rm'
 import { mensajeDeError } from '../utils/errores'
 
 const claseInput =
-  'w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-emerald-500'
+  'w-full rounded-lg border border-negro/20 bg-fondo px-3 py-2 text-sm outline-none focus:border-celeste'
 
 // Máximos de un alumno: el valor actual de cada ejercicio, el historial y un formulario para registrar uno nuevo.
 export default function Seccion1RM({ alumnoId }) {
@@ -62,8 +62,8 @@ export default function Seccion1RM({ alumnoId }) {
     }
   }
 
-  if (cargando) return <p className="mb-8 text-sm text-neutral-500">Cargando máximos...</p>
-  if (error) return <p className="mb-8 text-sm text-red-400">{error}</p>
+  if (cargando) return <p className="mb-8 text-sm text-negro0">Cargando máximos...</p>
+  if (error) return <p className="mb-8 text-sm text-red-700">{error}</p>
 
   // La lista viene ordenada de la medición más nueva a la más vieja: la primera de cada ejercicio es la actual.
   const actuales = []
@@ -72,19 +72,19 @@ export default function Seccion1RM({ alumnoId }) {
   }
 
   return (
-    <section className="mb-8 rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+    <section className="mb-8 rounded-2xl border border-negro/10 bg-gris p-5">
       <h3 className="mb-1 text-lg font-semibold">Máximos (1RM)</h3>
-      <p className="mb-4 text-sm text-neutral-400">
+      <p className="mb-4 text-sm text-negro/70">
         Con estos valores se calcula el peso de cada ejercicio a partir del % de carga de la rutina.
       </p>
 
       {actuales.length === 0 ? (
-        <p className="mb-4 text-sm text-neutral-500">Todavía no hay máximos registrados.</p>
+        <p className="mb-4 text-sm text-negro0">Todavía no hay máximos registrados.</p>
       ) : (
         <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {actuales.map((r) => (
-            <div key={r.ejercicioId} className="rounded-lg bg-neutral-950 px-3 py-2 text-center">
-              <p className="text-[10px] uppercase tracking-wide text-neutral-500">{r.nombreEjercicio}</p>
+            <div key={r.ejercicioId} className="rounded-lg bg-fondo px-3 py-2 text-center">
+              <p className="text-[10px] uppercase tracking-wide text-negro0">{r.nombreEjercicio}</p>
               <p className="text-sm font-medium">{r.valor1rm} kg</p>
             </div>
           ))}
@@ -92,7 +92,7 @@ export default function Seccion1RM({ alumnoId }) {
       )}
 
       <form onSubmit={registrar} className="grid grid-cols-2 items-end gap-3 sm:grid-cols-5">
-        <label className="col-span-2 flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="col-span-2 flex flex-col gap-1 text-xs text-negro/70">
           Ejercicio
           <select className={claseInput} value={ejercicioId} onChange={(e) => setEjercicioId(e.target.value)}>
             <option value="">Elegir...</option>
@@ -103,31 +103,31 @@ export default function Seccion1RM({ alumnoId }) {
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="flex flex-col gap-1 text-xs text-negro/70">
           1RM (kg)
           <input type="number" min="0" step="0.5" className={claseInput} value={valor} onChange={(e) => setValor(e.target.value)} />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-neutral-400">
+        <label className="flex flex-col gap-1 text-xs text-negro/70">
           Fecha (opcional)
           <input type="date" className={claseInput} value={fecha} onChange={(e) => setFecha(e.target.value)} />
         </label>
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-60"
+          className="rounded-lg bg-celeste px-3 py-2 text-sm font-medium text-negro transition hover:bg-celeste/80 disabled:opacity-60"
         >
           {guardando ? 'Guardando...' : 'Registrar'}
         </button>
       </form>
-      {errorForm && <p className="mt-2 text-sm text-red-400">{errorForm}</p>}
+      {errorForm && <p className="mt-2 text-sm text-red-700">{errorForm}</p>}
 
       {registros.length > 0 && (
         <details className="mt-4">
-          <summary className="cursor-pointer text-sm text-emerald-400">Ver historial ({registros.length})</summary>
-          <ul className="mt-2 divide-y divide-neutral-800 text-sm">
+          <summary className="cursor-pointer text-sm text-azul">Ver historial ({registros.length})</summary>
+          <ul className="mt-2 divide-y divide-negro/10 text-sm">
             {registros.map((r) => (
               <li key={r.id} className="flex justify-between py-1.5">
-                <span className="text-neutral-400">
+                <span className="text-negro/70">
                   {r.fechaMedicion} · {r.nombreEjercicio}
                 </span>
                 <span>{r.valor1rm} kg</span>

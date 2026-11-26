@@ -13,15 +13,15 @@ function formatearHorario(iso) {
 }
 
 const ESTILO_ESTADO = {
-  CONFIRMADA: { texto: 'Inscripto', clase: 'bg-emerald-500/15 text-emerald-400' },
-  ASISTIO: { texto: 'Asistió', clase: 'bg-sky-500/15 text-sky-400' },
-  NO_ASISTIO: { texto: 'No asistió', clase: 'bg-red-500/15 text-red-400' },
-  CANCELADA: { texto: 'Canceló', clase: 'bg-neutral-700/40 text-neutral-400' },
+  CONFIRMADA: { texto: 'Inscripto', clase: 'bg-celeste/15 text-azul' },
+  ASISTIO: { texto: 'Asistió', clase: 'bg-sky-500/15 text-sky-700' },
+  NO_ASISTIO: { texto: 'No asistió', clase: 'bg-red-500/15 text-red-700' },
+  CANCELADA: { texto: 'Canceló', clase: 'bg-negro/10 text-negro/70' },
 }
 
 const claseBotonPestana = (activa) =>
   `rounded-lg px-4 py-2 text-sm font-medium transition ${
-    activa ? 'bg-emerald-500 text-neutral-950' : 'border border-neutral-700 text-neutral-300 hover:bg-neutral-800'
+    activa ? 'bg-celeste text-negro' : 'border border-negro/20 text-negro hover:bg-negro/10'
   }`
 
 // Lista de inscriptos de una clase, con los botones para marcar la asistencia.
@@ -62,7 +62,7 @@ function Inscriptos({ claseId }) {
     }
   }
 
-  if (cargando) return <p className="mt-4 text-sm text-neutral-400">Cargando inscriptos...</p>
+  if (cargando) return <p className="mt-4 text-sm text-negro/70">Cargando inscriptos...</p>
 
   const activas = reservas.filter((r) => r.estado !== 'CANCELADA')
   const asistieron = activas.filter((r) => r.estado === 'ASISTIO').length
@@ -70,26 +70,26 @@ function Inscriptos({ claseId }) {
   const pendientes = activas.length - asistieron - ausentes
 
   return (
-    <div className="mt-4 border-t border-neutral-800 pt-4">
-      {error && <p className="mb-3 rounded-lg bg-red-500/15 px-3 py-2 text-sm text-red-400">{error}</p>}
+    <div className="mt-4 border-t border-negro/10 pt-4">
+      {error && <p className="mb-3 rounded-lg bg-red-500/15 px-3 py-2 text-sm text-red-700">{error}</p>}
 
       {reservas.length === 0 ? (
-        <p className="text-sm text-neutral-500">Todavía no hay alumnos inscriptos en esta clase.</p>
+        <p className="text-sm text-negro0">Todavía no hay alumnos inscriptos en esta clase.</p>
       ) : (
         <>
-          <p className="mb-3 text-sm text-neutral-400">
+          <p className="mb-3 text-sm text-negro/70">
             {activas.length} {activas.length === 1 ? 'inscripto' : 'inscriptos'} · {asistieron}{' '}
             {asistieron === 1 ? 'asistió' : 'asistieron'} · {ausentes} {ausentes === 1 ? 'ausente' : 'ausentes'} ·{' '}
             {pendientes} sin marcar
           </p>
-          <ul className="divide-y divide-neutral-800">
+          <ul className="divide-y divide-negro/10">
             {reservas.map((r) => {
               const estilo = ESTILO_ESTADO[r.estado] ?? ESTILO_ESTADO.CONFIRMADA
               const cancelada = r.estado === 'CANCELADA'
               return (
                 <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5">
                   <div className="flex items-center gap-3">
-                    <p className={`text-sm font-medium ${cancelada ? 'text-neutral-500' : ''}`}>
+                    <p className={`text-sm font-medium ${cancelada ? 'text-negro0' : ''}`}>
                       {r.nombreAlumno ?? `Alumno #${r.alumnoId}`}
                     </p>
                     <span className={`rounded-full px-2 py-0.5 text-xs ${estilo.clase}`}>{estilo.texto}</span>
@@ -99,14 +99,14 @@ function Inscriptos({ claseId }) {
                       <button
                         onClick={() => marcar(r, true)}
                         disabled={marcando !== null || r.estado === 'ASISTIO'}
-                        className="rounded-lg border border-neutral-700 px-3 py-1 text-xs text-neutral-300 transition hover:bg-neutral-800 disabled:opacity-40"
+                        className="rounded-lg border border-negro/20 px-3 py-1 text-xs text-negro transition hover:bg-negro/10 disabled:opacity-40"
                       >
                         {marcando === r.id ? 'Guardando...' : 'Asistió'}
                       </button>
                       <button
                         onClick={() => marcar(r, false)}
                         disabled={marcando !== null || r.estado === 'NO_ASISTIO'}
-                        className="rounded-lg border border-neutral-700 px-3 py-1 text-xs text-neutral-300 transition hover:bg-neutral-800 disabled:opacity-40"
+                        className="rounded-lg border border-negro/20 px-3 py-1 text-xs text-negro transition hover:bg-negro/10 disabled:opacity-40"
                       >
                         No asistió
                       </button>
@@ -150,8 +150,8 @@ export default function ClasesProfesor() {
     }
   }, [usuario.profesorId])
 
-  if (cargando) return <p className="text-neutral-400">Cargando clases...</p>
-  if (error) return <p className="text-red-400">{error}</p>
+  if (cargando) return <p className="text-negro/70">Cargando clases...</p>
+  if (error) return <p className="text-red-700">{error}</p>
 
   const proximas = clases
     .filter((c) => new Date(c.horario).getTime() > ahora)
@@ -164,7 +164,7 @@ export default function ClasesProfesor() {
   return (
     <div className="max-w-4xl">
       <h2 className="text-2xl font-bold">Mis clases</h2>
-      <p className="mb-5 mt-1 text-sm text-neutral-400">
+      <p className="mb-5 mt-1 text-sm text-negro/70">
         Mirá quiénes se inscribieron a tus clases y registrá la asistencia.
       </p>
 
@@ -190,7 +190,7 @@ export default function ClasesProfesor() {
       </div>
 
       {visibles.length === 0 ? (
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-negro0">
           {pestana === 'proximas' ? 'No tenés clases próximas.' : 'Todavía no hay clases pasadas.'}
         </p>
       ) : (
@@ -199,19 +199,19 @@ export default function ClasesProfesor() {
             const ocupados = c.cupoMaximo - c.cupoDisponible
             const desplegada = abierta === c.id
             return (
-              <li key={c.id} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+              <li key={c.id} className="rounded-2xl border border-negro/10 bg-gris p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="font-semibold">{c.tipoActividad}</p>
-                    <p className="text-sm text-neutral-400">{formatearHorario(c.horario)}</p>
+                    <p className="text-sm text-negro/70">{formatearHorario(c.horario)}</p>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-sm text-neutral-400">
+                    <span className="text-sm text-negro/70">
                       {ocupados} de {c.cupoMaximo} lugares
                     </span>
                     <button
                       onClick={() => setAbierta(desplegada ? null : c.id)}
-                      className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm text-neutral-300 transition hover:bg-neutral-800"
+                      className="rounded-lg border border-negro/20 px-3 py-1.5 text-sm text-negro transition hover:bg-negro/10"
                     >
                       {desplegada ? 'Ocultar inscriptos' : 'Ver inscriptos'}
                     </button>
